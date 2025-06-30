@@ -1,4 +1,9 @@
 {
+  "schema": {
+    "title": "string",
+    "description": "string",
+    "url": "string"
+  },
   "documents": [
     {
       "title": "Chocolate Chip Cookies",

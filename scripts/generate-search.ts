@@ -18,7 +18,21 @@ async function generateSearchData() {
   }
 
   const outPath = path.join(process.cwd(), "public", "search.json");
-  await fs.writeFile(outPath, JSON.stringify({ documents: searchData }, null, 2));
+  await fs.writeFile(
+    outPath,
+    JSON.stringify(
+      {
+        schema: {
+          title: "string",
+          description: "string",
+          url: "string",
+        },
+        documents: searchData,
+      },
+      null,
+      2
+    )
+  );
   console.log(`Search data written to ${outPath}`);
 }
 

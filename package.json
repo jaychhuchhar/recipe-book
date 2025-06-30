@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "build": "npm run generate:search && next build",
-    "dev": "next dev --turbo",
+    "dev": "npm run generate:search && next dev --turbo",
     "start": "next start",
     "postinstall": "fumadocs-mdx",
     "export": "next export",

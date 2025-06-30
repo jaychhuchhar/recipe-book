@@ -20,8 +20,8 @@ export const baseOptions = {
       secondary: false,
     }
   ],
-  search: {
-    type: "static",
-    url: "/search.json",
-  },
+  // search: {
+  //   type: "static",
+  //   url: "/search.json",
+  // },
 };
