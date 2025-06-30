@@ -1,3 +1,5 @@
+import Link from "next/link"
+
 export default function HomePage() {
   return (
     <main className="flex flex-col items-center justify-center min-h-screen px-4 py-12 text-center bg-white dark:bg-gray-950">
@@ -8,12 +10,9 @@ export default function HomePage() {
         Explore easy, delicious, and inspiring recipes — from quick breakfasts to sweet desserts.
         Perfect for home cooks who love flavor and simplicity.
       </p>
-      <a
-        href="/recipes"
-        className="px-6 py-3 border border-gray-300 dark:border-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition"
-      >
+      <Link href="/recipes" className="px-6 py-3 text-lg font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-700 transition-colors">
         📘 Browse All Recipes
-      </a>
+      </Link>
     </main>
   );
 }
