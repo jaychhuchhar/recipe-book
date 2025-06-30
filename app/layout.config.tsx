@@ -1,7 +1,6 @@
-import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
 import Image from 'next/image';
 
-export const baseOptions: BaseLayoutProps = {
+export const baseOptions = {
   nav: {
     title: (
       <>
@@ -21,4 +20,8 @@ export const baseOptions: BaseLayoutProps = {
       secondary: false,
     }
   ],
+  search: {
+    type: "static",
+    url: "/search.json",
+  },
 };
