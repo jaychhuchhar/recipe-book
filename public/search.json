@@ -1,0 +1,17 @@
+[
+  {
+    "title": "Chocolate Chip Cookies",
+    "description": "Classic, all-time favorite chocolate chip cookies, perfect to enjoy with tea, coffee, or just by themselves.",
+    "url": "/recipes/chocolate-chip-cookies"
+  },
+  {
+    "title": "Overview",
+    "description": "Welcome to the Recipe Book – your place for delicious recipes.",
+    "url": "/recipes/index"
+  },
+  {
+    "title": "Whole Wheat Bread",
+    "description": "Healthy, Tasty Whole Wheat Bread",
+    "url": "/recipes/whole_wheat_bread"
+  }
+]
