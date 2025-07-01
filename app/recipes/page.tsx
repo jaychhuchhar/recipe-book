@@ -1,14 +1,10 @@
+import * as React from 'react';
 import Image from 'next/image';
 import OverviewDynamic from '@/components/OverviewDynamic';
 import { source } from '@/lib/source';
 
-function serializeRecipeData(data: any) {
-  // Only keep plain serializable fields
-  const {
-    _exports, // remove
-    content, // remove
-    ...rest
-  } = data;
+function serializeRecipeData(data: unknown) {
+  const { /* remove */ ...rest } = data as Record<string, unknown>;
   // Remove any functions or modules from nested fields if needed
   return JSON.parse(JSON.stringify(rest));
 }
@@ -29,7 +25,7 @@ export default function RecipesIndexPage() {
           <p style={{ margin: 0, fontSize: '1.25rem', color: '#555' }}>Discover, cook, and enjoy curated recipes with rich details and beautiful images.</p>
         </div>
       </div>
-      <OverviewDynamic recipes={recipes} />
+      <OverviewDynamic recipes={recipes.map(r => r.data)} />
     </div>
   );
 }

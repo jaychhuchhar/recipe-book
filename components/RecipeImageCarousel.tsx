@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Image from "next/image";
 
 export function RecipeImageCarousel({ images, alt }: { images: string[]; alt: string }) {
   const [index, setIndex] = React.useState(0);
@@ -9,7 +10,7 @@ export function RecipeImageCarousel({ images, alt }: { images: string[]; alt: st
   React.useEffect(() => {
     if (numImages <= 1) return;
     timerRef.current = setTimeout(() => {
-      setIndex((i) => (i + 1) % numImages);
+      setIndex((i: number) => (i + 1) % numImages);
     }, 3500);
     return () => {
       if (timerRef.current) clearTimeout(timerRef.current);
@@ -20,17 +21,19 @@ export function RecipeImageCarousel({ images, alt }: { images: string[]; alt: st
 
   return (
     <div style={{ position: "relative", maxWidth: 480, margin: "1.2em auto", height: 320, overflow: "hidden", background: "#f3f4f6", borderRadius: "0.7em", boxShadow: "0 2px 12px #0001" }}>
-      <img
+      <Image
         src={images[index]}
         alt={alt}
+        width={480}
+        height={320}
         style={{
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
           display: "block",
           borderRadius: "0.7em",
           background: "#f3f4f6",
           transition: "opacity 0.3s",
+          objectFit: 'cover',
+          width: '100%',
+          height: '100%'
         }}
       />
       {numImages > 1 && (

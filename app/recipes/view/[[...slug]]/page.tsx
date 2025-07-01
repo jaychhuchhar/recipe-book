@@ -6,7 +6,6 @@ import { getMDXComponents } from '@/mdx-components';
 import { RecipeTitle, RecipeDescription } from '@/components/RecipeTitleDescription';
 import { RecipeMeta } from '@/components/RecipeMeta';
 import { RecipeImageCarousel } from '@/components/RecipeImageCarousel';
-import { RecipeImage } from '@/components/RecipeImage';
 
 export default async function Page(props: {
   params: Promise<{ slug?: string[] }>;
@@ -24,7 +23,6 @@ export default async function Page(props: {
         <RecipeImageCarousel images={page.data.images} alt={page.data.title} />
       ) : null}
       <RecipeMeta
-        images={page.data.images}
         rating={page.data.rating}
         author={page.data.author}
         date={page.data.date}

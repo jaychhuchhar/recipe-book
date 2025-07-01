@@ -1,0 +1,12 @@
+services:
+  recipe-book:
+    container_name: recipe-book
+    hostname: recipe-book
+    build: .
+    ports:
+      - "5000:80"
+
+networks:
+  default:
+    name: local_nw
+    external: true

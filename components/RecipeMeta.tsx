@@ -3,7 +3,6 @@
 import React from 'react';
 
 export function RecipeMeta({
-  images,
   rating,
   author,
   date,
@@ -21,7 +20,6 @@ export function RecipeMeta({
   tags,
   source,
 }: {
-  images?: string[];
   rating?: string | number;
   author?: string;
   date?: string;

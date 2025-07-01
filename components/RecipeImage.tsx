@@ -1,8 +1,8 @@
 "use client";
 import React from 'react';
+import Image from 'next/image';
 
 export function RecipeImage({ src, alt }: { src: string; alt: string }) {
-  if (!src) return null;
   const imgRef = React.useRef<HTMLImageElement>(null);
   const [isSmall, setIsSmall] = React.useState(false);
 
@@ -22,7 +22,7 @@ export function RecipeImage({ src, alt }: { src: string; alt: string }) {
   }, [src]);
 
   return (
-    <img
+    <Image
       ref={imgRef}
       src={src}
       alt={alt}
