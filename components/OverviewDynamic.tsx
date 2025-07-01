@@ -89,9 +89,35 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
     <>
       {/* Recipe of the Day */}
       {recipeOfTheDay && (
-        <div style={{ margin: '2rem 0', background: '#fffbe6', borderRadius: '1rem', boxShadow: '0 1px 6px #0001', padding: '1.5rem', display: 'flex', alignItems: 'center', gap: '1.5rem', flexWrap: 'wrap' }}>
-          <Image src={recipeOfTheDay.images?.[0] || '/logo.png'} alt={recipeOfTheDay.title} width={120} height={90} style={{ objectFit: 'cover', borderRadius: '0.75rem' }} />
-          <div>
+        <div
+          style={{
+            margin: '2rem 0',
+            background: '#fffbe6',
+            borderRadius: '1rem',
+            boxShadow: '0 1px 6px #0001',
+            padding: '1.5rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1.5rem',
+            flexWrap: 'nowrap',
+          }}
+          className="recipe-of-day-flex"
+        >
+          <Image
+            src={recipeOfTheDay.images?.[0] || '/logo.png'}
+            alt={recipeOfTheDay.title}
+            width={120}
+            height={90}
+            style={{
+              objectFit: 'cover',
+              borderRadius: '0.75rem',
+              width: 120,
+              height: 90,
+              display: 'block',
+              flexShrink: 0,
+            }}
+          />
+          <div style={{ minWidth: 200 }}>
             <div style={{ fontWeight: 700, color: '#b8860b', marginBottom: 4 }}>Recipe of the Day</div>
             <Link href={`/recipes/view/${getSlugFromRecipe(recipeOfTheDay)}`} style={{ fontSize: '1.25rem', fontWeight: 600, color: '#2d7a46', textDecoration: 'none' }}>{recipeOfTheDay.title}</Link>
             <div style={{ color: '#555', marginTop: 4 }}>{recipeOfTheDay.description}</div>
@@ -203,6 +229,17 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
         </div>
       </div>
       <blockquote>Start exploring and enjoy your cooking journey!</blockquote>
+
+      {/* Responsive fix for Recipe of the Day flex layout */}
+      <style jsx global>{`
+        @media (max-width: 600px) {
+          .recipe-of-day-flex {
+            flex-wrap: wrap !important;
+            flex-direction: column !important;
+            align-items: stretch !important;
+          }
+        }
+      `}</style>
     </>
   );
 }

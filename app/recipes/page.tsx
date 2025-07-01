@@ -4,9 +4,8 @@ import OverviewDynamic from '@/components/OverviewDynamic';
 import { source } from '@/lib/source';
 
 function serializeRecipeData(data: unknown) {
-  const { /* remove */ ...rest } = data as Record<string, unknown>;
-  // Remove any functions or modules from nested fields if needed
-  return JSON.parse(JSON.stringify(rest));
+  // Ensure all frontmatter fields are included, especially images
+  return JSON.parse(JSON.stringify(data));
 }
 
 export default function RecipesIndexPage() {
@@ -14,7 +13,8 @@ export default function RecipesIndexPage() {
   const recipes = source.getPages().map(page => ({
     slugs: page.slugs,
     url: page.url,
-    data: serializeRecipeData(page.data),
+    // Pass all frontmatter fields, including images
+    ...serializeRecipeData(page.data),
   }));
   return (
     <div style={{ maxWidth: 900, margin: '0 auto', padding: '2rem 1rem' }}>
@@ -25,7 +25,7 @@ export default function RecipesIndexPage() {
           <p style={{ margin: 0, fontSize: '1.25rem', color: '#555' }}>Discover, cook, and enjoy curated recipes with rich details and beautiful images.</p>
         </div>
       </div>
-      <OverviewDynamic recipes={recipes.map(r => r.data)} />
+      <OverviewDynamic recipes={recipes} />
     </div>
   );
 }
