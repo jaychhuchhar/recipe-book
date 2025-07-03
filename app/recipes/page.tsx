@@ -1,6 +1,7 @@
 import * as React from 'react';
 import Image from 'next/image';
 import OverviewDynamic from '@/components/OverviewDynamic';
+import HeroSection from '@/components/HeroSection';
 import { source } from '@/lib/source';
 
 function serializeRecipeData(data: unknown) {
@@ -16,15 +17,10 @@ export default function RecipesIndexPage() {
     // Pass all frontmatter fields, including images
     ...serializeRecipeData(page.data),
   }));
+
   return (
     <div style={{ maxWidth: 900, margin: '0 auto', padding: '2rem 1rem' }}>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem', marginBottom: '2rem', background: '#f8fafc', padding: '2rem 1rem', borderRadius: '1.5rem', boxShadow: '0 2px 8px #0001' }}>
-        <Image src="/logo.png" alt="Recipe Book Logo" width={96} height={96} style={{ borderRadius: '1rem', background: '#fff' }} />
-        <div>
-          <h1 style={{ margin: 0, fontSize: '2.5rem', fontWeight: 700 }}>Recipe Book</h1>
-          <p style={{ margin: 0, fontSize: '1.25rem', color: '#555' }}>Discover, cook, and enjoy curated recipes with rich details and beautiful images.</p>
-        </div>
-      </div>
+      <HeroSection />
       <OverviewDynamic recipes={recipes} />
     </div>
   );

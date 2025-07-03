@@ -87,55 +87,186 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
 
   return (
     <>
+      {/* Responsive global styles for mobile and dark mode */}
+      <style jsx global>{`
+        :root {
+          --card-bg-light: #fff;
+          --card-bg-dark: #232329;
+          --heading-light: #222;
+          --heading-dark: #f3f3f3;
+          --accent-light: #333;
+          --accent-dark: #e0e0e0;
+          --text-light: #555;
+          --text-dark: #e0e0e0;
+        }
+        html.dark {
+          --card-bg: var(--card-bg-dark);
+          --heading: var(--heading-dark);
+          --accent: var(--accent-dark);
+          --text: var(--text-dark);
+        }
+        html:not(.dark) {
+          --card-bg: var(--card-bg-light);
+          --heading: var(--heading-light);
+          --accent: var(--accent-light);
+          --text: var(--text-light);
+        }
+        /* Force all headings, meta labels, toggle/details links, and buttons to use heading color */
+        h1, h2, h3, h4, h5, h6,
+        .meta-heading, .recipe-meta-label, .recipe-details-label, .calories-label,
+        .toggle-details, .show-details, .hide-details, .meta-link, .recipe-meta-link,
+        .recipe-meta a, .meta a, .details-toggle, .details-link,
+        .recipe-meta button, .meta button, .details-toggle button, .details-link button,
+        .recipe-meta summary, .meta summary, .details-toggle summary, .details-link summary,
+        button.toggle-details, button.show-details, button.hide-details,
+        summary.toggle-details, summary.show-details, summary.hide-details {
+          color: var(--heading) !important;
+        }
+        a, button, summary {
+          color: var(--heading) !important;
+        }
+        /* Override inline Tailwind blue-600 color for calories/details */
+        [style*="color:#2563eb"], [style*="color: #2563eb"] {
+          color: var(--heading) !important;
+        }
+        /* Force override of any inline color property */
+        [style*="color:"] {
+          color: var(--heading) !important;
+        }
+        @media (max-width: 900px) {
+          body, html {
+            overflow-x: hidden !important;
+          }
+          .recipe-of-day-flex,
+          .keen-slider,
+          .keen-slider__slide,
+          .recipe-book-glance-flex {
+            flex-wrap: wrap !important;
+            flex-direction: column !important;
+            align-items: stretch !important;
+            min-width: 0 !important;
+            max-width: 100vw !important;
+            box-sizing: border-box;
+          }
+          .keen-slider__slide {
+            min-width: 0 !important;
+            max-width: 100vw !important;
+          }
+        }
+        @media (max-width: 600px) {
+          .recipe-of-day-flex {
+            flex-wrap: wrap !important;
+            flex-direction: column !important;
+            align-items: stretch !important;
+          }
+        }
+        html.dark body, html[data-theme='dark'] body {
+          background: #18181b !important;
+          color: var(--text-dark) !important;
+        }
+        html.dark .recipe-of-the-day-flex,
+        html.dark .keen-slider__slide,
+        html.dark .app-features-list,
+        html.dark .recipe-book-glance {
+          background: var(--card-bg-dark) !important;
+          color: var(--text-dark) !important;
+          border-color: #333 !important;
+        }
+        html.dark .recipe-book-glance-flex {
+          background: none !important;
+        }
+        html.dark h1, html.dark h2, html.dark h3, html.dark h4, html.dark h5, html.dark h6 {
+          color: var(--heading-dark) !important;
+        }
+        html.dark .hero-section h1,
+        html.dark .recipe-of-day-flex .recipe-of-day-title,
+        html.dark .glance-card-number,
+        html.dark .featured-section-title,
+        html.dark .app-features-title,
+        html.dark .glance-section-title {
+          color: var(--heading-dark) !important;
+        }
+        html.dark .recipe-of-day-flex .recipe-of-day-accent {
+          color: var(--accent-dark) !important;
+        }
+        html.dark .recipe-of-day-flex .recipe-of-day-description,
+        html.dark .glance-card-label {
+          color: var(--text-dark) !important;
+        }
+        html:not(.dark) h1, html:not(.dark) h2, html:not(.dark) h3, html:not(.dark) h4, html:not(.dark) h5, html:not(.dark) h6 {
+          color: var(--heading-light) !important;
+        }
+        html:not(.dark) .hero-section h1,
+        html:not(.dark) .recipe-of-day-flex .recipe-of-day-title,
+        html:not(.dark) .glance-card-number,
+        html:not(.dark) .featured-section-title,
+        html:not(.dark) .app-features-title,
+        html:not(.dark) .glance-section-title {
+          color: var(--heading-light) !important;
+        }
+        html:not(.dark) .recipe-of-day-flex .recipe-of-day-accent {
+          color: var(--accent-light) !important;
+        }
+        html:not(.dark) .recipe-of-day-flex .recipe-of-day-description,
+        html:not(.dark) .glance-card-label {
+          color: var(--text-light) !important;
+        }
+      `}</style>
+
       {/* Recipe of the Day */}
       {recipeOfTheDay && (
         <div
           style={{
-            margin: '2rem 0',
-            background: '#fffbe6',
+            margin: '1.2rem auto 1.2rem auto', // Reduced space above and below
+            background: 'var(--card-bg)',
             borderRadius: '1rem',
             boxShadow: '0 1px 6px #0001',
-            padding: '1.5rem',
+            padding: '1.2rem 0.8rem',
             display: 'flex',
             alignItems: 'center',
-            gap: '1.5rem',
+            gap: '1.2rem',
             flexWrap: 'nowrap',
+            maxWidth: 600,
+            justifyContent: 'center',
           }}
           className="recipe-of-day-flex"
         >
           <Image
             src={recipeOfTheDay.images?.[0] || '/logo.png'}
             alt={recipeOfTheDay.title}
-            width={120}
-            height={90}
+            width={56}
+            height={56}
             style={{
               objectFit: 'cover',
               borderRadius: '0.75rem',
-              width: 120,
-              height: 90,
+              width: 56,
+              height: 56,
               display: 'block',
               flexShrink: 0,
+              minWidth: 56,
+              minHeight: 56,
+              background: '#fff',
             }}
           />
-          <div style={{ minWidth: 200 }}>
-            <div style={{ fontWeight: 700, color: '#b8860b', marginBottom: 4 }}>Recipe of the Day</div>
-            <Link href={`/recipes/view/${getSlugFromRecipe(recipeOfTheDay)}`} style={{ fontSize: '1.25rem', fontWeight: 600, color: '#2d7a46', textDecoration: 'none' }}>{recipeOfTheDay.title}</Link>
-            <div style={{ color: '#555', marginTop: 4 }}>{recipeOfTheDay.description}</div>
+          <div>
+            <div className="recipe-of-day-accent" style={{ fontWeight: 700, marginBottom: 4 }}>Recipe of the Day</div>
+            <Link className="recipe-of-day-title" href={`/recipes/view/${getSlugFromRecipe(recipeOfTheDay)}`} style={{ fontSize: '1.25rem', fontWeight: 600, textDecoration: 'none' }}>{recipeOfTheDay.title}</Link>
+            <div className="recipe-of-day-description" style={{ marginTop: 4 }}>{recipeOfTheDay.description}</div>
           </div>
         </div>
       )}
 
-      <h2 style={{ marginTop: '2.5rem', fontSize: '2rem', fontWeight: 700, marginBottom: '1.5rem' }}>Featured Recipes</h2>
+      <h2 className="featured-section-title" style={{ marginTop: '2.5rem', fontSize: '2rem', fontWeight: 700, marginBottom: '1.5rem' }}>Featured Recipes</h2>
       {hasMounted ? (
-        <div style={{ position: 'relative', width: '100%', margin: '0 auto 2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ position: 'relative', width: '100%', margin: '0 auto 2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', overflowX: 'auto' }}>
           <button
             onClick={() => instanceRef.current?.prev()}
             aria-label="Previous"
             style={{ zIndex: 2, background: '#fff', border: 'none', borderRadius: '50%', width: 36, height: 36, boxShadow: '0 1px 6px #0001', cursor: 'pointer', marginRight: 16 }}
           >&lt;</button>
-          <div ref={sliderRef} className="keen-slider" style={{ width: '100%', borderRadius: '1rem', height: 340, overflow: 'hidden', flex: 1 }}>
+          <div ref={sliderRef} className="keen-slider" style={{ width: '100%', borderRadius: '1rem', height: 340, overflow: 'hidden', flex: 1, minWidth: 0 }}>
             {featured.map((page) => (
-              <div className="keen-slider__slide" key={page.title} style={{ height: 340, display: 'flex', alignItems: 'stretch' }}>
+              <div className="keen-slider__slide" key={page.title} style={{ height: 340, display: 'flex', alignItems: 'stretch', minWidth: 0 }}>
                 <Link
                   href={`/recipes/view/${getSlugFromRecipe(page)}`}
                   style={{
@@ -148,7 +279,7 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
                     display: 'flex',
                     flexDirection: 'column',
                     borderRadius: '1rem',
-                    background: '#fff',
+                    background: 'var(--card-bg)',
                     border: '1.5px solid #e2e8f0',
                     boxShadow: '0 2px 12px #0002',
                     overflow: 'hidden',
@@ -173,7 +304,7 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
           >&gt;</button>
         </div>
       ) : (
-        <div style={{ width: '100%', margin: '0 auto 2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', height: 340 }}>
+        <div style={{ width: '100%', margin: '0 auto 2.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', height: 340, overflowX: 'auto' }}>
           {featured.slice(0, 1).map((page) => (
             <Link
               key={page.title}
@@ -188,7 +319,7 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
                 display: 'flex',
                 flexDirection: 'column',
                 borderRadius: '1rem',
-                background: '#fff',
+                background: 'var(--card-bg)',
                 border: '1.5px solid #e2e8f0',
                 boxShadow: '0 2px 12px #0002',
                 overflow: 'hidden',
@@ -205,7 +336,7 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
         </div>
       )}
 
-      <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem' }}>App Features</h2>
+      <h2 className="app-features-title" style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem' }}>App Features</h2>
       <ul style={{ fontSize: '1.1rem', marginBottom: '2.5rem', paddingLeft: '1.5rem', lineHeight: 1.7 }}>
         <li>Modern, grouped recipe metadata and beautiful visuals</li>
         <li>Image carousel for recipes with multiple images</li>
@@ -213,31 +344,119 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
         <li>Modern, responsive UI</li>
       </ul>
 
-      <h2 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem' }}>Recipe Book at a Glance</h2>
-      <div style={{ display: 'flex', gap: '2.5rem', flexWrap: 'wrap', marginBottom: '2rem' }}>
-        <div style={{ background: '#fff', borderRadius: '1rem', boxShadow: '0 1px 6px #0001', padding: '1.5rem 2rem', minWidth: 200, textAlign: 'center' }}>
-          <strong style={{ fontSize: '2rem', color: '#2d7a46' }}>{recipes.length}</strong>
-          <div style={{ color: '#555', marginTop: '0.5rem' }}>Total Recipes</div>
+      <h2 className="glance-section-title" style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '1rem' }}>Recipe Book at a Glance</h2>
+      <div className="recipe-book-glance-flex" style={{
+        display: 'flex',
+        gap: '1.2rem',
+        flexWrap: 'wrap',
+        marginBottom: '2rem',
+        justifyContent: 'center',
+        alignItems: 'center',
+        background: 'none', // Remove any wrapper background
+      }}>
+        <div style={{ 
+          background: 'var(--card-bg)',
+          borderRadius: '1rem', 
+          boxShadow: '0 1px 6px #0001', 
+          padding: '1rem 1.2rem', 
+          minWidth: 140, 
+          maxWidth: 180, 
+          textAlign: 'center', 
+          flex: '1 1 140px', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+          justifyContent: 'center' 
+        }}>
+          <strong className="glance-card-number" style={{ fontSize: '1.5rem', lineHeight: 1 }}>{recipes.length}</strong>
+          <div className="glance-card-label" style={{ marginTop: '0.3rem', fontSize: '1rem' }}>Total Recipes</div>
         </div>
-        <div style={{ background: '#fff', borderRadius: '1rem', boxShadow: '0 1px 6px #0001', padding: '1.5rem 2rem', minWidth: 200, textAlign: 'center' }}>
-          <strong style={{ fontSize: '2rem', color: '#2d7a46' }}>{Array.from(new Set(recipes.map(r => r.category).filter(Boolean))).length}</strong>
-          <div style={{ color: '#555', marginTop: '0.5rem' }}>Categories</div>
+        <div style={{ 
+          background: 'var(--card-bg)',
+          borderRadius: '1rem', 
+          boxShadow: '0 1px 6px #0001', 
+          padding: '1rem 1.2rem', 
+          minWidth: 140, 
+          maxWidth: 180, 
+          textAlign: 'center', 
+          flex: '1 1 140px', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+          justifyContent: 'center' 
+        }}>
+          <strong className="glance-card-number" style={{ fontSize: '1.5rem', lineHeight: 1 }}>{Array.from(new Set(recipes.map(r => r.category).filter(Boolean))).length}</strong>
+          <div className="glance-card-label" style={{ marginTop: '0.3rem', fontSize: '1rem' }}>Categories</div>
         </div>
-        <div style={{ background: '#fff', borderRadius: '1rem', boxShadow: '0 1px 6px #0001', padding: '1.5rem 2rem', minWidth: 200, textAlign: 'center' }}>
-          <strong style={{ fontSize: '2rem', color: '#2d7a46' }}>{Array.from(new Set(recipes.flatMap(r => r.tags || []))).length}</strong>
-          <div style={{ color: '#555', marginTop: '0.5rem' }}>Tags</div>
+        <div style={{ 
+          background: 'var(--card-bg)',
+          borderRadius: '1rem', 
+          boxShadow: '0 1px 6px #0001', 
+          padding: '1rem 1.2rem', 
+          minWidth: 140, 
+          maxWidth: 180, 
+          textAlign: 'center', 
+          flex: '1 1 140px', 
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+          justifyContent: 'center' 
+        }}>
+          <strong className="glance-card-number" style={{ fontSize: '1.5rem', lineHeight: 1 }}>{Array.from(new Set(recipes.flatMap(r => r.tags || []))).length}</strong>
+          <div className="glance-card-label" style={{ marginTop: '0.3rem', fontSize: '1rem' }}>Tags</div>
         </div>
       </div>
       <blockquote>Start exploring and enjoy your cooking journey!</blockquote>
 
-      {/* Responsive fix for Recipe of the Day flex layout */}
+      {/* Responsive fix for Recipe of the Day and Hero section layout */}
       <style jsx global>{`
-        @media (max-width: 600px) {
-          .recipe-of-day-flex {
-            flex-wrap: wrap !important;
-            flex-direction: column !important;
-            align-items: stretch !important;
+        /* Make hero and recipe of the day full width on all screens */
+        .hero-section,
+        .recipe-of-day-flex {
+          max-width: none !important;
+          width: 100% !important;
+          margin-left: 0 !important;
+          margin-right: 0 !important;
+        }
+        @media (max-width: 900px) {
+          .recipe-book-glance-flex {
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5rem;
           }
+          .recipe-of-day-flex {
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: flex-start !important;
+            gap: 1.2rem !important;
+          }
+        }
+        @media (max-width: 600px) {
+          .recipe-book-glance-flex {
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 1.2rem !important;
+          }
+          .recipe-of-day-flex {
+            flex-direction: row !important;
+            align-items: flex-start !important;
+            justify-content: flex-start !important;
+            gap: 1.2rem !important;
+          }
+          .recipe-of-day-flex > div {
+            flex: 1 1 0%;
+            min-width: 0;
+          }
+        }
+        /* Ensure Recipe of the Day stays row on all screens */
+        .recipe-of-day-flex {
+          flex-direction: row !important;
+          align-items: center !important;
+          justify-content: flex-start !important;
+          gap: 1.2rem !important;
         }
       `}</style>
     </>
