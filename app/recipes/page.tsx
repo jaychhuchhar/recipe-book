@@ -1,7 +1,6 @@
 import * as React from 'react';
-import Image from 'next/image';
-import OverviewDynamic from '@/components/OverviewDynamic';
 import HeroSection from '@/components/HeroSection';
+import OverviewDynamic from '@/components/OverviewDynamic';
 import { source } from '@/lib/source';
 
 function serializeRecipeData(data: unknown) {
