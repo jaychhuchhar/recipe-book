@@ -17,8 +17,9 @@ function getRecipeOfTheDay<T>(arr: T[]): T | null {
 }
 
 // Add a helper to get the slug from the file name (info.path)
-function getSlugFromRecipe(recipe: Recipe & { _path?: string }): string {
-  // If _path is provided, use it (without extension), else fallback to slugify title
+function getSlugFromRecipe(recipe: Recipe & { _path?: string, url?: string }): string {
+  // Use the canonical url if present (from source.getPages())
+  if (recipe.url) return recipe.url.replace(/^\//, '');
   if (recipe._path) return recipe._path.replace(/\.mdx?$/, '');
   // fallback: slugify title (should not be needed if all recipes have _path)
   return recipe.title.toLowerCase().replace(/\s+/g, '-');
@@ -250,7 +251,7 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
           />
           <div>
             <div className="recipe-of-day-accent" style={{ fontWeight: 700, marginBottom: 4 }}>Recipe of the Day</div>
-            <Link className="recipe-of-day-title" href={`/recipes/view/${getSlugFromRecipe(recipeOfTheDay)}`} style={{ fontSize: '1.25rem', fontWeight: 600, textDecoration: 'none' }}>{recipeOfTheDay.title}</Link>
+            <Link className="recipe-of-day-title" href={`/${getSlugFromRecipe(recipeOfTheDay)}`} style={{ fontSize: '1.25rem', fontWeight: 600, textDecoration: 'none' }}>{recipeOfTheDay.title}</Link>
             <div className="recipe-of-day-description" style={{ marginTop: 4 }}>{recipeOfTheDay.description}</div>
           </div>
         </div>
@@ -268,7 +269,7 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
             {featured.map((page) => (
               <div className="keen-slider__slide" key={page.title} style={{ height: 340, display: 'flex', alignItems: 'stretch', minWidth: 0 }}>
                 <Link
-                  href={`/recipes/view/${getSlugFromRecipe(page)}`}
+                  href={`/${getSlugFromRecipe(page)}`}
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
