@@ -1,0 +1,81 @@
+---
+title: "Advanced Step Example"
+description: "Example showing main steps and sub-steps"
+---
+
+import { RecipeIngredients } from '@/components/RecipeIngredients';
+
+<RecipeIngredients>
+  <>Whole Grain Bread (1 slice)</>
+  <>Ripe Avocado (1/2 piece)</>
+  <>Egg (1 piece)</>
+</RecipeIngredients>
+
+## Instructions
+
+<RecipeInstructions>
+  <RecipeInstructions.Section title="Detailed Preparation">
+    <RecipeInstructions.Step>
+      Prepare the avocado properly:
+    </RecipeInstructions.Step>
+    
+    {/* Sub-step 1.1 - Cutting */}
+    <ServerStepImage 
+      recipeSlug="breakfast/avocado-toast-egg" 
+      stepNumber="1.1" 
+      alt="Cutting avocado in half" 
+      caption="Step 1.1: Cut the avocado in half and remove the pit"
+      size="medium"
+    />
+    
+    {/* Sub-step 1.2 - Mashing */}
+    <ServerStepImage 
+      recipeSlug="breakfast/avocado-toast-egg" 
+      stepNumber="1.2" 
+      alt="Mashing avocado with fork" 
+      caption="Step 1.2: Mash the avocado with a fork until smooth"
+      size="medium"
+    />
+    
+    <RecipeInstructions.Step>
+      Toast the bread until golden brown.
+    </RecipeInstructions.Step>
+    
+    {/* Main step 2 */}
+    <ServerStepImage 
+      recipeSlug="breakfast/avocado-toast-egg" 
+      stepNumber={2} 
+      alt="Golden toasted bread" 
+      caption="Step 2: Toast until evenly golden brown"
+    />
+    
+    <RecipeInstructions.Step>
+      Assemble and enjoy!
+    </RecipeInstructions.Step>
+    
+    {/* Main step 3 */}
+    <ServerStepImage 
+      recipeSlug="breakfast/avocado-toast-egg" 
+      stepNumber={3} 
+      alt="Final assembled avocado toast" 
+      caption="Step 3: Final assembled avocado toast with egg"
+    />
+  </RecipeInstructions.Section>
+</RecipeInstructions>
+
+## Naming Convention Examples
+
+This recipe demonstrates the new flexible naming system:
+
+- **Main steps**: `1.jpg`, `2.jpg`, `3.jpg`
+- **Sub-steps**: `1.1.jpg`, `1.2.jpg` for detailed breakdowns
+- **Legacy support**: `step-1.jpg` still works for backward compatibility
+
+### File Structure
+```
+public/images/recipes/breakfast/avocado-toast-egg/steps/
+├── 1.1.jpg    ← Cutting avocado (sub-step)
+├── 1.2.jpg    ← Mashing avocado (sub-step)  
+├── 2.jpg      ← Toasting bread (main step)
+└── 3.jpg      ← Final assembly (main step)
+```

@@ -18,5 +18,6 @@ export interface Recipe {
   cost?: string;
   tags?: string[];
   source?: string;
+  previewImage?: string; // Added for server-side preview image
   // Add more fields as needed
 }

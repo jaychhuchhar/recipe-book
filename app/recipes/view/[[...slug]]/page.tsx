@@ -5,7 +5,8 @@ import { createRelativeLink } from 'fumadocs-ui/mdx';
 import { getMDXComponents } from '@/mdx-components';
 import { RecipeTitle, RecipeDescription } from '@/components/RecipeTitleDescription';
 import { RecipeMeta } from '@/components/RecipeMeta';
-import { KeenSliderImageCarousel } from '@/components/KeenSliderImageCarousel';
+import { RecipeImageManager } from '@/components/RecipeImageManager';
+import { getRecipeImages } from '@/lib/recipe-images';
 
 export default async function Page(props: {
   params: Promise<{ slug?: string[] }>;
@@ -15,13 +16,25 @@ export default async function Page(props: {
   if (!page) notFound();
 
   const MDXContent = page.data.body;
-
+  
+  // Extract recipe slug from file path - use only the filename, not the category folder
+  const recipeSlug = page.slugs?.length > 0 ? page.slugs[page.slugs.length - 1] : page.data.title.toLowerCase().replace(/\s+/g, '-');
+  
+  // Get local images for this recipe
+  const localOverviewImages = getRecipeImages(recipeSlug, 'overview');
+  
   return (
     <DocsPage toc={page.data.toc} full={page.data.full}>
       <RecipeTitle>{page.data.title}</RecipeTitle>
-      {page.data.images && page.data.images.length > 0 ? (
-        <KeenSliderImageCarousel images={page.data.images} alt={page.data.title} />
-      ) : null}
+      
+      {/* Recipe overview images - only show if local images exist */}
+      <RecipeImageManager 
+        type="overview"
+        localImages={localOverviewImages}
+        fallbackImages={[]}
+        alt={page.data.title}
+      />
+      
       <RecipeMeta
         rating={page.data.rating}
         author={page.data.author}

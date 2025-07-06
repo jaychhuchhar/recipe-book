@@ -7,7 +7,6 @@ import {
 import { z } from 'zod';
 
 const recipeFrontmatterSchema = frontmatterSchema.extend({
-  images: z.array(z.string()).optional(),
   rating: z.union([z.string(), z.number()]).optional(),
   author: z.string().optional(),
   date: z.string().optional(),

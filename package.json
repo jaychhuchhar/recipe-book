@@ -6,13 +6,15 @@
     "build": "next build",
     "dev": "next dev --turbo",
     "start": "next start",
-    "postinstall": "fumadocs-mdx"
+    "postinstall": "fumadocs-mdx",
+    "setup-images": "node scripts/setup-recipe-images.js"
   },
   "dependencies": {
     "@orama/orama": "^3.1.9",
     "fumadocs-core": "^15.6.0",
     "fumadocs-mdx": "^11.6.10",
     "fumadocs-ui": "^15.6.0",
+    "glob": "^11.0.3",
     "keen-slider": "^6.8.6",
     "next": "15.3.4",
     "react": "^19.1.0",

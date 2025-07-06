@@ -243,12 +243,12 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
           className="recipe-of-day-flex"
         >
           <Image
-            src={recipeOfTheDay.images?.[0] || '/logo.png'}
+            src={recipeOfTheDay.previewImage || '/logo.png'}
             alt={recipeOfTheDay.title}
             width={56}
             height={56}
             style={{
-              objectFit: recipeOfTheDay.images?.[0] ? 'cover' : 'contain',
+              objectFit: (recipeOfTheDay.previewImage || '/logo.png') !== '/logo.png' ? 'cover' : 'contain',
               borderRadius: '0.75rem',
               width: 56,
               height: 56,
@@ -321,16 +321,16 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
                   onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.boxShadow = '0 2px 12px rgba(0, 0, 0, 0.1)')}
                 >
                   <Image 
-                    src={page.images?.[0] || '/logo.png'} 
+                    src={page.previewImage || '/logo.png'} 
                     alt={page.title} 
                     width={320} 
                     height={200} 
                     style={{ 
-                      objectFit: page.images?.[0] ? 'cover' : 'contain', 
+                      objectFit: (page.previewImage || '/logo.png') !== '/logo.png' ? 'cover' : 'contain', 
                       width: '100%', 
                       height: 200, 
                       flexShrink: 0,
-                      backgroundColor: page.images?.[0] ? 'transparent' : 'var(--card-bg)'
+                      backgroundColor: (page.previewImage || '/logo.png') !== '/logo.png' ? 'transparent' : 'var(--card-bg)'
                     }} 
                   />
                   <div style={{ padding: '1.25rem', minHeight: 120, boxSizing: 'border-box', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
@@ -394,16 +394,16 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
               }}
             >
               <Image 
-                src={page.images?.[0] || '/logo.png'} 
+                src={page.previewImage || '/logo.png'} 
                 alt={page.title} 
                 width={320} 
                 height={200} 
                 style={{ 
-                  objectFit: page.images?.[0] ? 'cover' : 'contain', 
+                  objectFit: (page.previewImage || '/logo.png') !== '/logo.png' ? 'cover' : 'contain', 
                   width: '100%', 
                   height: 200, 
                   flexShrink: 0,
-                  backgroundColor: page.images?.[0] ? 'transparent' : 'var(--card-bg)'
+                  backgroundColor: (page.previewImage || '/logo.png') !== '/logo.png' ? 'transparent' : 'var(--card-bg)'
                 }} 
               />
               <div style={{ padding: '1.25rem', minHeight: 120, boxSizing: 'border-box', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
