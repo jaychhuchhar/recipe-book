@@ -1,0 +1,72 @@
+Title: [Recipe Name Here]
+Description: [Brief description of the recipe]
+Category: [Breakfast/Lunch/Dinner/Snacks/Desserts/Beverages]
+Cuisine: [American/Italian/Mexican/Asian/Mediterranean/etc.]
+Difficulty: [Easy/Medium/Hard]
+Servings: [Number of servings]
+Prep Time: [X Minutes]
+Cook Time: [X Minutes]
+Calories: [Approximate calories per serving]
+Dietary: [Vegetarian/Vegan/Gluten-Free/Dairy-Free/None]
+Allergens: [Common allergens or None]
+Cost: [$X]
+
+## Ingredients
+- [Quantity] [ingredient name]
+- [Quantity] [ingredient name] 
+- [Quantity] [ingredient name]
+- [Add more ingredients as needed]
+
+## Instructions
+
+### [Section Name - e.g., "Prepare Ingredients"]
+1. [First step instruction]
+   Alt: [Image description for step 1]
+2. [Second step instruction]
+   Alt: [Image description for step 2]  
+3. [Third step instruction]
+
+### [Another Section - e.g., "Cook the Dish"]
+4. [Continue with numbered steps]
+   Alt: [Image description for step 4]
+5. [Each step should be clear and concise]
+6. [Include temperatures, times, and techniques]
+   Alt: [Image description for step 6]
+
+## Notes
+- [Helpful tip or substitution]
+- [Storage instructions]
+- [Serving suggestions]
+- [Make-ahead tips]
+
+## Tags
+- [Quick]
+- [Family-friendly]
+- [Make-ahead]
+- [One-pot]
+- [Add relevant tags]
+
+---
+
+# Instructions for Use:
+
+1. Copy this template to a new .txt file
+2. Replace all [bracketed text] with your recipe details
+3. Delete these instructions at the bottom
+4. Run: npm run convert-recipe your-recipe.txt
+5. For recipes with step images: npm run convert-recipe your-recipe.txt --images
+6. Add image files to: public/images/recipes/recipe-name/steps/
+7. The tool will automatically generate the full MDX recipe!
+
+# Tips:
+
+- Use specific quantities (1 cup, 2 tablespoons, etc.)
+- Break instructions into logical sections
+- Include cooking times and temperatures
+- Add helpful notes and tips
+- Keep steps concise but complete
+- Use common ingredient names for better highlighting
+- For step images: Add "Alt: description" on the line after each instruction
+- Image files should be named step1.jpg, step2.jpg, etc.
+- Use --images flag when converting: npm run convert-recipe recipe.txt --images
+- Alt text describes what the image shows for accessibility
