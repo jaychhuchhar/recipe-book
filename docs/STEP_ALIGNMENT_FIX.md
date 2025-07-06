@@ -100,13 +100,13 @@ The fixed components work seamlessly in recipe MDX files:
       Toast the bread until golden brown.
     </InstructionStep>
     
-    <ServerStepImage recipeSlug="breakfast/avocado-toast-egg" stepNumber={1} />
+    <ServerStepImage stepNumber={1} />
     
     <InstructionStep stepNumber={2}>
       Mash the avocado and spread on toast.
     </InstructionStep>
     
-    <ServerStepImage recipeSlug="breakfast/avocado-toast-egg" stepNumber={2} />
+    <ServerStepImage stepNumber={2} />
   </InstructionsSection>
 </InstructionsContainer>
 ```

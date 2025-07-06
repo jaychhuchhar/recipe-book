@@ -97,12 +97,12 @@ Master document providing complete project overview, statistics, and implementat
     <InstructionStep stepNumber={1}>
       First instruction with clear, concise direction.
     </InstructionStep>
-    <ServerStepImage recipeSlug="recipe-name" stepNumber={1} alt="Description" />
+    <ServerStepImage stepNumber={1} alt="Description" />
     
     <InstructionStep stepNumber={2}>
       Second instruction continuing the process.
     </InstructionStep>
-    <ServerStepImage recipeSlug="recipe-name" stepNumber={2} alt="Description" />
+    <ServerStepImage stepNumber={2} alt="Description" />
   </InstructionsSection>
 </InstructionsContainer>
 ```

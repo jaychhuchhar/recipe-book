@@ -2,7 +2,7 @@ import { source } from '@/lib/source';
 import { DocsPage, DocsBody } from 'fumadocs-ui/page';
 import { notFound } from 'next/navigation';
 import { createRelativeLink } from 'fumadocs-ui/mdx';
-import { getMDXComponents } from '@/mdx-components';
+import { getMDXComponentsWithRecipeSlug } from '@/mdx-components';
 import { RecipeTitle, RecipeDescription } from '@/components/RecipeTitleDescription';
 import { RecipeMeta } from '@/components/RecipeMeta';
 import { RecipeImageManager } from '@/components/RecipeImageManager';
@@ -56,7 +56,7 @@ export default async function Page(props: {
       <RecipeDescription>{page.data.description}</RecipeDescription>
       <DocsBody>
         <MDXContent
-          components={getMDXComponents({
+          components={getMDXComponentsWithRecipeSlug(recipeSlug, {
             a: createRelativeLink(source, page),
           })}
         />

@@ -107,12 +107,12 @@ The component uses CSS custom properties for theme switching:
     <InstructionStep stepNumber={1}>
       Cook the eggs to your preference (sunny-side up, over easy, etc.).
     </InstructionStep>
-    <AutoStepImage stepNumber={1} recipeSlug="avocado-toast-egg" />
+    <AutoStepImage stepNumber={1} />
     
     <InstructionStep stepNumber={2}>
       Toast the bread until golden brown.
     </InstructionStep>
-    <AutoStepImage stepNumber={2} recipeSlug="avocado-toast-egg" />
+    <AutoStepImage stepNumber={2} />
   </InstructionsSection>
 </InstructionsContainer>
 ```

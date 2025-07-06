@@ -43,3 +43,37 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     ...components,
   };
 }
+
+// Enhanced version that injects recipe slug into components
+export function getMDXComponentsWithRecipeSlug(
+  recipeSlug: string, 
+  components?: MDXComponents
+): MDXComponents {
+  // Create a wrapper for ServerStepImage that automatically includes the recipe slug
+  const ServerStepImageWithSlug = (props: any) => (
+    <ServerStepImage {...props} recipeSlug={recipeSlug} />
+  );
+
+  return {
+    ...defaultMdxComponents,
+    RecipeStepImages,
+    RecipeStepImage,
+    AutoStepImage,
+    ServerStepImage: ServerStepImageWithSlug,
+    RecipeInstructions,
+    // Export sub-components with simpler names
+    RecipeInstructionsSection,
+    RecipeInstructionsStep,
+    RecipeIngredients,
+    RecipeNotes,
+    RecipeTags,
+    RecipeMeta,
+    RecipeTitle,
+    RecipeDescription,
+    YouTube,
+    InstructionsContainer,
+    InstructionsSection,
+    InstructionStep,
+    ...components,
+  };
+}

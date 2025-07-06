@@ -39,10 +39,10 @@ Updated `recipeSlug` references to remove category prefix:
 
 ```tsx
 // Before
-<ServerStepImage recipeSlug="breakfast/avocado-toast-egg" stepNumber={1} />
+<ServerStepImage stepNumber={1} />
 
 // After  
-<ServerStepImage recipeSlug="avocado-toast-egg" stepNumber={1} />
+<ServerStepImage stepNumber={1} />
 ```
 
 ### 2. **Setup Script**
@@ -98,7 +98,7 @@ Updated all documentation files to reflect the simplified structure:
 2. **Update MDX files** to use simplified recipe slugs:
    ```tsx
    // Update all instances
-   recipeSlug="breakfast/recipe-name" → recipeSlug="recipe-name"
+   → 
    ```
 
 3. **Run setup script** to create any missing directories:
@@ -109,7 +109,7 @@ Updated all documentation files to reflect the simplified structure:
 ### For New Recipes
 Simply use the recipe name as the slug:
 ```tsx
-<ServerStepImage recipeSlug="my-new-recipe" stepNumber={1} />
+<ServerStepImage stepNumber={1} />
 ```
 
 ## 📊 Impact Summary

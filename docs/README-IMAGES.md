@@ -20,7 +20,7 @@ Your recipe book now has a **structured image management system** that automatic
 
 3. **Use in recipes** (optional for step images):
    ```jsx
-   <RecipeStepImages recipeSlug="breakfast/avocado-toast-egg" alt="Cooking steps" />
+   <RecipeStepImages alt="Cooking steps" />
    ```
 
 ## 📁 Directory Structure Example
@@ -68,13 +68,13 @@ public/images/recipes/
 
 ### Basic Step Images
 ```jsx
-<ServerStepImage recipeSlug="breakfast/avocado-toast-egg" stepNumber={1} alt="Main step" />
+<ServerStepImage stepNumber={1} alt="Main step" />
 ```
 
 ### Sub-step Images (New!)
 ```jsx
-<ServerStepImage recipeSlug="breakfast/avocado-toast-egg" stepNumber="1.1" alt="Sub-step" />
-<ServerStepImage recipeSlug="breakfast/avocado-toast-egg" stepNumber="1.2" alt="Another sub-step" />
+<ServerStepImage stepNumber="1.1" alt="Sub-step" />
+<ServerStepImage stepNumber="1.2" alt="Another sub-step" />
 ```
 
 ### Manual Step Images (fallback)

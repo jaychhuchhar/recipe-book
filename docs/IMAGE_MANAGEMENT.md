@@ -72,7 +72,7 @@ Overview images are automatically detected and displayed on recipe pages. No cod
 ```tsx
 // Automatically used in recipe view pages
 <RecipeImageManager 
-  recipeSlug="breakfast/avocado-toast-egg"
+  
   type="overview"
   localImages={detectedImages}
   fallbackImages={page.data.images}
@@ -85,7 +85,7 @@ Use the `RecipeStepImages` component in your MDX files:
 
 ```jsx
 <!-- In your recipe.mdx file -->
-<RecipeStepImages recipeSlug="breakfast/avocado-toast-egg" alt="Cooking steps" />
+<RecipeStepImages alt="Cooking steps" />
 ```
 
 Or with manual images:
@@ -186,7 +186,7 @@ images:
 2. Toast the bread  
 3. Assemble the toast
 
-<RecipeStepImages recipeSlug="breakfast/avocado-toast-egg" alt="Avocado toast steps" />
+<RecipeStepImages alt="Avocado toast steps" />
 ```
 
 ## Performance Notes

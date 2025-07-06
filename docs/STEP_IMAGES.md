@@ -4,6 +4,20 @@
 
 Now you can display images **after each cooking step** instead of in a carousel. Each instruction step can have its own centered image with an optional caption.
 
+## ✨ Automatic Recipe Detection
+
+**NEW**: The `recipeSlug` prop is no longer needed! The system automatically detects which recipe you're in based on the filename, so you can simply use:
+
+```jsx
+<ServerStepImage stepNumber={1} alt="Description" caption="Optional caption" />
+```
+
+Instead of the old way:
+```jsx
+<!-- OLD WAY - No longer needed -->
+<ServerStepImage recipeSlug="recipe-name" stepNumber={1} alt="Description" />
+```
+
 ## 🛠️ Available Components
 
 ### 1. `ServerStepImage` (Recommended)
@@ -11,7 +25,7 @@ Automatically finds and displays step images at build time.
 
 ```jsx
 <ServerStepImage 
-  recipeSlug="breakfast/avocado-toast-egg" 
+  
   stepNumber={1} 
   alt="Toasting bread and mashing avocado" 
   caption="Toast the bread and mash the avocado with a fork"
@@ -36,7 +50,7 @@ Automatically finds images on the client side (slower but more flexible).
 
 ```jsx
 <AutoStepImage 
-  recipeSlug="breakfast/avocado-toast-egg" 
+  
   stepNumber={1} 
   alt="Step 1"
 />
@@ -53,7 +67,7 @@ Automatically finds images on the client side (slower but more flexible).
     </InstructionStep>
     
     <ServerStepImage 
-      recipeSlug="avocado-toast-egg" 
+      
       stepNumber={1} 
       alt="Mashing avocado on toast" 
       caption="Mash the avocado directly on the toasted bread"
@@ -64,7 +78,7 @@ Automatically finds images on the client side (slower but more flexible).
     </InstructionStep>
     
     <ServerStepImage 
-      recipeSlug="avocado-toast-egg" 
+      
       stepNumber={2} 
       alt="Adding cooked egg" 
       caption="Gently place the cooked egg on top"
@@ -83,7 +97,7 @@ Automatically finds images on the client side (slower but more flexible).
     
     {/* Sub-step 1.1 */}
     <ServerStepImage 
-      recipeSlug="avocado-toast-egg" 
+      
       stepNumber="1.1" 
       alt="Cutting avocado" 
       caption="First, cut the avocado in half"
@@ -91,7 +105,7 @@ Automatically finds images on the client side (slower but more flexible).
     
     {/* Sub-step 1.2 */}
     <ServerStepImage 
-      recipeSlug="avocado-toast-egg" 
+      
       stepNumber="1.2" 
       alt="Mashing avocado" 
       caption="Then mash it with a fork until smooth"
@@ -102,7 +116,7 @@ Automatically finds images on the client side (slower but more flexible).
     </InstructionStep>
     
     <ServerStepImage 
-      recipeSlug="avocado-toast-egg" 
+      
       stepNumber={2} 
       alt="Toasted bread" 
       caption="Toast until evenly golden"
@@ -169,7 +183,7 @@ import { RecipeIngredients } from '@/components/RecipeIngredients';
     </InstructionStep>
     
     <ServerStepImage 
-      recipeSlug="scrambled-eggs" 
+      
       stepNumber={1} 
       alt="Whisked eggs in bowl" 
       caption="Whisk until completely smooth with no streaks"
@@ -181,7 +195,7 @@ import { RecipeIngredients } from '@/components/RecipeIngredients';
     </InstructionStep>
     
     <ServerStepImage 
-      recipeSlug="scrambled-eggs" 
+      
       stepNumber={2} 
       alt="Melting butter in pan" 
       caption="Keep heat low to prevent burning"
@@ -192,7 +206,7 @@ import { RecipeIngredients } from '@/components/RecipeIngredients';
     </InstructionStep>
     
     <ServerStepImage 
-      recipeSlug="scrambled-eggs" 
+      
       stepNumber={3} 
       alt="Stirring eggs in pan" 
       caption="Keep stirring to create small, fluffy curds"
@@ -203,7 +217,7 @@ import { RecipeIngredients } from '@/components/RecipeIngredients';
     </InstructionStep>
     
     <ServerStepImage 
-      recipeSlug="scrambled-eggs" 
+      
       stepNumber={4} 
       alt="Finished scrambled eggs" 
       caption="Creamy, perfectly cooked scrambled eggs"
@@ -216,7 +230,7 @@ import { RecipeIngredients } from '@/components/RecipeIngredients';
 
 ### Before (Carousel)
 ```jsx
-<RecipeStepImages recipeSlug="breakfast/avocado-toast-egg" alt="All steps" />
+<RecipeStepImages alt="All steps" />
 ```
 
 ### After (Individual Steps)
@@ -224,10 +238,10 @@ import { RecipeIngredients } from '@/components/RecipeIngredients';
 <InstructionsContainer>
   <InstructionsSection title="Cooking">
     <InstructionStep stepNumber={1}>Step instruction here</InstructionStep>
-    <ServerStepImage recipeSlug="avocado-toast-egg" stepNumber={1} />
+    <ServerStepImage stepNumber={1} />
     
     <InstructionStep stepNumber={2}>Next step instruction</InstructionStep>
-    <ServerStepImage recipeSlug="avocado-toast-egg" stepNumber={2} />
+    <ServerStepImage stepNumber={2} />
   </InstructionsSection>
 </InstructionsContainer>
 ```

@@ -3,22 +3,26 @@ import { RecipeStepImage } from './RecipeStepImage';
 import { getRecipeImages } from '@/lib/recipe-images';
 
 interface ServerStepImageProps {
-  recipeSlug: string;
   stepNumber: number | string; // Support both 1 and "1.1", "1.2" etc
   alt?: string;
   caption?: string;
   size?: 'small' | 'medium' | 'large';
   fallbackSrc?: string;
+  recipeSlug?: string; // Optional - will be injected by MDX wrapper if not provided
 }
 
 export function ServerStepImage({ 
-  recipeSlug, 
   stepNumber, 
   alt, 
   caption, 
   size = 'medium',
-  fallbackSrc 
+  fallbackSrc,
+  recipeSlug
 }: ServerStepImageProps) {
+  if (!recipeSlug) {
+    console.warn('ServerStepImage: No recipeSlug provided. This should be automatically injected.');
+    return null;
+  }
   // Get all step images for this recipe
   const stepImages = getRecipeImages(recipeSlug, 'steps');
   

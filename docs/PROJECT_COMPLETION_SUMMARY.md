@@ -133,12 +133,12 @@ import { AutoStepImage } from '@/components/AutoStepImage';
     <InstructionStep stepNumber={1}>
       Heat olive oil in a large skillet over medium-high heat.
     </InstructionStep>
-    <AutoStepImage stepNumber={1} recipeSlug="avocado-toast-egg" />
+    <AutoStepImage stepNumber={1} />
     
     <InstructionStep stepNumber={2}>
       Crack eggs into the skillet and cook to desired doneness.
     </InstructionStep>
-    <AutoStepImage stepNumber={2} recipeSlug="avocado-toast-egg" />
+    <AutoStepImage stepNumber={2} />
   </InstructionsSection>
 </InstructionsContainer>
 ```
@@ -148,7 +148,7 @@ import { AutoStepImage } from '@/components/AutoStepImage';
 import { KeenSliderImageCarousel } from '@/components/KeenSliderImageCarousel';
 
 <KeenSliderImageCarousel 
-  recipeSlug="avocado-toast-egg" 
+  
   className="mb-6"
 />
 ```
