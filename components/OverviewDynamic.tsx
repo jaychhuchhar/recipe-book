@@ -126,6 +126,16 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
         a, button, summary {
           color: var(--heading) !important;
         }
+        
+        /* Ensure Keen Slider cards fit properly */
+        .keen-slider__slide {
+          overflow: visible !important;
+        }
+        .keen-slider__slide > * {
+          width: 100% !important;
+          box-sizing: border-box !important;
+        }
+        
         /* Override inline Tailwind blue-600 color for calories/details */
         [style*="color:#2563eb"], [style*="color: #2563eb"] {
           color: var(--heading) !important;
@@ -238,7 +248,7 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
             width={56}
             height={56}
             style={{
-              objectFit: 'cover',
+              objectFit: recipeOfTheDay.images?.[0] ? 'cover' : 'contain',
               borderRadius: '0.75rem',
               width: 56,
               height: 56,
@@ -246,7 +256,7 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
               flexShrink: 0,
               minWidth: 56,
               minHeight: 56,
-              background: '#fff',
+              background: 'var(--card-bg)',
             }}
           />
           <div>
@@ -263,36 +273,69 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
           <button
             onClick={() => instanceRef.current?.prev()}
             aria-label="Previous"
-            style={{ zIndex: 2, background: '#fff', border: 'none', borderRadius: '50%', width: 36, height: 36, boxShadow: '0 1px 6px #0001', cursor: 'pointer', marginRight: 16 }}
+            style={{ 
+              zIndex: 2, 
+              background: 'var(--card-bg)', 
+              color: 'var(--heading)',
+              border: '1px solid var(--accent)', 
+              borderRadius: '50%', 
+              width: 36, 
+              height: 36, 
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)', 
+              cursor: 'pointer', 
+              marginRight: 16,
+              fontSize: '18px',
+              fontWeight: 'bold',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'scale(1.05)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.15)';
+            }}
           >&lt;</button>
           <div ref={sliderRef} className="keen-slider" style={{ width: '100%', borderRadius: '1rem', height: 340, overflow: 'hidden', flex: 1, minWidth: 0 }}>
             {featured.map((page) => (
-              <div className="keen-slider__slide" key={page.title} style={{ height: 340, display: 'flex', alignItems: 'stretch', minWidth: 0 }}>
+              <div className="keen-slider__slide" key={page.title} style={{ height: 340, display: 'flex', alignItems: 'stretch' }}>
                 <Link
                   href={`/${getSlugFromRecipe(page)}`}
                   style={{
                     textDecoration: 'none',
                     color: 'inherit',
                     width: '100%',
-                    minWidth: 220,
-                    maxWidth: 340,
                     height: 340,
                     display: 'flex',
                     flexDirection: 'column',
                     borderRadius: '1rem',
                     background: 'var(--card-bg)',
-                    border: '1.5px solid #e2e8f0',
-                    boxShadow: '0 2px 12px #0002',
+                    border: '1.5px solid var(--accent)',
+                    boxShadow: '0 2px 12px rgba(0, 0, 0, 0.1)',
                     overflow: 'hidden',
                     transition: 'box-shadow 0.2s, transform 0.2s',
+                    boxSizing: 'border-box',
                   }}
-                  onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.boxShadow = '0 4px 18px #0003')}
-                  onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.boxShadow = '0 2px 12px #0002')}
+                  onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.boxShadow = '0 4px 18px rgba(0, 0, 0, 0.15)')}
+                  onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.boxShadow = '0 2px 12px rgba(0, 0, 0, 0.1)')}
                 >
-                  <Image src={page.images?.[0] || '/logo.png'} alt={page.title} width={320} height={200} style={{ objectFit: 'cover', width: '100%', height: 200, flexShrink: 0 }} />
+                  <Image 
+                    src={page.images?.[0] || '/logo.png'} 
+                    alt={page.title} 
+                    width={320} 
+                    height={200} 
+                    style={{ 
+                      objectFit: page.images?.[0] ? 'cover' : 'contain', 
+                      width: '100%', 
+                      height: 200, 
+                      flexShrink: 0,
+                      backgroundColor: page.images?.[0] ? 'transparent' : 'var(--card-bg)'
+                    }} 
+                  />
                   <div style={{ padding: '1.25rem', minHeight: 120, boxSizing: 'border-box', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
                     <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600 }}>{page.title}</h3>
-                    <p style={{ margin: '0.5rem 0 0', color: '#666', flex: 1 }}>{page.description}</p>
+                    <p style={{ margin: '0.5rem 0 0', color: 'var(--text)', flex: 1 }}>{page.description}</p>
                   </div>
                 </Link>
               </div>
@@ -301,7 +344,29 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
           <button
             onClick={() => instanceRef.current?.next()}
             aria-label="Next"
-            style={{ zIndex: 2, background: '#fff', border: 'none', borderRadius: '50%', width: 36, height: 36, boxShadow: '0 1px 6px #0001', cursor: 'pointer', marginLeft: 16 }}
+            style={{ 
+              zIndex: 2, 
+              background: 'var(--card-bg)', 
+              color: 'var(--heading)',
+              border: '1px solid var(--accent)', 
+              borderRadius: '50%', 
+              width: 36, 
+              height: 36, 
+              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)', 
+              cursor: 'pointer', 
+              marginLeft: 16,
+              fontSize: '18px',
+              fontWeight: 'bold',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'scale(1.05)';
+              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.2)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'scale(1)';
+              e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.15)';
+            }}
           >&gt;</button>
         </div>
       ) : (
@@ -314,23 +379,36 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
                 textDecoration: 'none',
                 color: 'inherit',
                 width: '100%',
-                minWidth: 220,
                 maxWidth: 340,
                 height: 340,
                 display: 'flex',
                 flexDirection: 'column',
                 borderRadius: '1rem',
                 background: 'var(--card-bg)',
-                border: '1.5px solid #e2e8f0',
-                boxShadow: '0 2px 12px #0002',
+                border: '1.5px solid var(--accent)',
+                boxShadow: '0 2px 12px rgba(0, 0, 0, 0.1)',
                 overflow: 'hidden',
                 transition: 'box-shadow 0.2s, transform 0.2s',
+                boxSizing: 'border-box',
+                margin: '0 auto',
               }}
             >
-              <Image src={page.images?.[0] || '/logo.png'} alt={page.title} width={320} height={200} style={{ objectFit: 'cover', width: '100%', height: 200, flexShrink: 0 }} />
+              <Image 
+                src={page.images?.[0] || '/logo.png'} 
+                alt={page.title} 
+                width={320} 
+                height={200} 
+                style={{ 
+                  objectFit: page.images?.[0] ? 'cover' : 'contain', 
+                  width: '100%', 
+                  height: 200, 
+                  flexShrink: 0,
+                  backgroundColor: page.images?.[0] ? 'transparent' : 'var(--card-bg)'
+                }} 
+              />
               <div style={{ padding: '1.25rem', minHeight: 120, boxSizing: 'border-box', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
                 <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600 }}>{page.title}</h3>
-                <p style={{ margin: '0.5rem 0 0', color: '#666', flex: 1 }}>{page.description}</p>
+                <p style={{ margin: '0.5rem 0 0', color: 'var(--text)', flex: 1 }}>{page.description}</p>
               </div>
             </Link>
           ))}

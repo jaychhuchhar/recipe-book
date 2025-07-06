@@ -5,7 +5,7 @@ import { createRelativeLink } from 'fumadocs-ui/mdx';
 import { getMDXComponents } from '@/mdx-components';
 import { RecipeTitle, RecipeDescription } from '@/components/RecipeTitleDescription';
 import { RecipeMeta } from '@/components/RecipeMeta';
-import { RecipeImageCarousel } from '@/components/RecipeImageCarousel';
+import { KeenSliderImageCarousel } from '@/components/KeenSliderImageCarousel';
 
 export default async function Page(props: {
   params: Promise<{ slug?: string[] }>;
@@ -20,7 +20,7 @@ export default async function Page(props: {
     <DocsPage toc={page.data.toc} full={page.data.full}>
       <RecipeTitle>{page.data.title}</RecipeTitle>
       {page.data.images && page.data.images.length > 0 ? (
-        <RecipeImageCarousel images={page.data.images} alt={page.data.title} />
+        <KeenSliderImageCarousel images={page.data.images} alt={page.data.title} />
       ) : null}
       <RecipeMeta
         rating={page.data.rating}

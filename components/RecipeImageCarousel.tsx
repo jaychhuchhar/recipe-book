@@ -5,6 +5,8 @@ import Image from "next/image";
 export function RecipeImageCarousel({ images, alt }: { images: string[]; alt: string }) {
   const [index, setIndex] = React.useState(0);
   const timerRef = React.useRef<NodeJS.Timeout | null>(null);
+  const touchStartX = React.useRef(0);
+  const touchEndX = React.useRef(0);
   const numImages = images.length;
 
   React.useEffect(() => {
@@ -17,10 +19,48 @@ export function RecipeImageCarousel({ images, alt }: { images: string[]; alt: st
     };
   }, [index, numImages]);
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.targetTouches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX.current || !touchEndX.current) return;
+    
+    const distance = touchStartX.current - touchEndX.current;
+    const isLeftSwipe = distance > 50;
+    const isRightSwipe = distance < -50;
+
+    if (isLeftSwipe && numImages > 1) {
+      setIndex((i) => (i + 1) % numImages);
+    }
+    if (isRightSwipe && numImages > 1) {
+      setIndex((i) => (i - 1 + numImages) % numImages);
+    }
+  };
+
   if (!images || images.length === 0) return null;
 
   return (
-    <div style={{ position: "relative", maxWidth: 480, margin: "1.2em auto", height: 320, overflow: "hidden", background: "#f3f4f6", borderRadius: "0.7em", boxShadow: "0 2px 12px #0001" }}>
+    <div 
+      style={{ 
+        position: "relative", 
+        maxWidth: 480, 
+        margin: "1.2em auto", 
+        height: 320, 
+        overflow: "hidden", 
+        background: "#f3f4f6", 
+        borderRadius: "0.7em", 
+        boxShadow: "0 2px 12px #0001",
+        touchAction: "pan-y pinch-zoom" // Allow vertical scrolling but capture horizontal swipes
+      }}
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       <Image
         src={images[index]}
         alt={alt}
