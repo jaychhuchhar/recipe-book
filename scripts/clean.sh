@@ -15,6 +15,9 @@ pkill -f "next start" 2>/dev/null || true
 echo "🗑️  Removing .next directory..."
 rm -rf .next
 
+echo "🗑️  Removing out directory..."
+rm -rf out
+
 # Remove dependency directories
 echo "🗑️  Removing node_modules..."
 rm -rf node_modules
