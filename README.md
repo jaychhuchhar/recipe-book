@@ -17,27 +17,57 @@ A modern, feature-rich recipe management application built with Next.js and Fuma
 # Install dependencies
 npm install
 
-# Run development server
+# Run development server (automatically sets up images and converts recipes)
 npm run dev
+
+# Build for production (automatically sets up images and converts recipes)
+npm run build
 
 # Open in browser
 # http://localhost:3000
 ```
 
+## 📝 Recipe Management
+
+This project features a fully automated recipe and image management system:
+
+### 🔄 Automated Workflow
+- **Text Sources**: Write recipes in simple text format in the `recipes/` folder with category subfolders
+- **Automatic Conversion**: Text files are automatically converted to MDX during dev and build
+- **Image Management**: Recipe image directories are automatically created and cleaned up
+- **Batch Processing**: Convert all recipes at once with automatic cleanup of orphaned files
+- **Flexible Categories**: Use any folder name in `recipes/` as a category, or place uncategorized recipes in the root
+- **Step Images**: Auto-detected from `Alt:` lines in recipe instructions
+- **YouTube Support**: Embed external videos with auto-generated titles
+
+### 🛠️ Manual Commands
+- **Convert Recipes**: `npm run convert` (batch) or `npm run convert-recipe file.txt` (single)
+- **Setup Images**: `npm run setup-images` (creates directories, cleans up unused ones)
+- **No Setup Required**: Development and build scripts handle everything automatically
+
 ## 📋 Project Structure
 
 ```
 recipe-book/
-├── components/              # React components
-│   ├── SimpleInstructions.tsx    # Step numbering system
-│   ├── ServerStepImage.tsx       # Image management
-│   └── KeenSliderImageCarousel.tsx # Image carousels
-├── content/docs/           # Recipe content (MDX)
+├── recipes/                # Source text files (organized by category)
+│   ├── breakfast/
+│   ├── lunch/
+│   ├── dinner/
+│   ├── snacks/
+│   └── _templates/         # Recipe templates
+├── content/docs/           # Generated MDX files (organized by category)
 │   ├── breakfast/
 │   ├── lunch/
 │   ├── dinner/
 │   └── snacks/
-├── public/images/recipes/  # Recipe images
+├── public/images/recipes/  # Auto-managed recipe images
+├── scripts/                # Automation scripts
+│   ├── recipe-converter.js      # Text to MDX conversion
+│   └── setup-recipe-images.js   # Image directory management
+├── components/             # React components
+│   ├── SimpleInstructions.tsx   # Step numbering system
+│   ├── ServerStepImage.tsx      # Image management
+│   └── KeenSliderImageCarousel.tsx # Image carousels
 └── docs/                   # Comprehensive documentation
 ```
 
@@ -82,8 +112,7 @@ recipe-book/
 
 Comprehensive documentation is available in the `/docs` folder:
 
-- **[Complete Documentation Index](./docs/README.md)** - Start here for full overview
-- **[Step Images Guide](./docs/STEP_IMAGES.md)** - How to add step-by-step images
+- **[Recipe Converter](./docs/RECIPE_CONVERTER.md)** - Automated text to MDX conversion
 - **[Image Management](./docs/IMAGE_MANAGEMENT.md)** - Complete image system guide
 - **[Step Numbering](./docs/STEP_NUMBERING_ENHANCEMENT.md)** - Enhanced numbering system
 - **[Project Summary](./docs/PROJECT_COMPLETION_SUMMARY.md)** - Complete feature overview
@@ -91,15 +120,23 @@ Comprehensive documentation is available in the `/docs` folder:
 ## 🛠️ Development
 
 ### Recipe Creation
-1. Create new MDX file in appropriate category folder
-2. Use the automated setup script: `node scripts/setup-recipe-images.js`
-3. Add step images to the generated directories
-4. Implement using the standardized component pattern
+1. Create new text file in appropriate category folder in `recipes/`
+2. Use the template from `recipes/_templates/recipe-template.txt`
+3. Include `Alt:` lines after instruction steps for step images
+4. Add YouTube links as external sources (auto-title generated)
+5. Run `npm run dev` or `npm run convert` to generate MDX
+
+### Automated Workflow
+- **Development**: `npm run dev` automatically converts recipes and sets up images
+- **Build**: `npm run build` automatically converts recipes and sets up images  
+- **Manual Conversion**: `npm run convert` (batch) or `npm run convert-recipe file.txt` (single)
+- **Manual Image Setup**: `npm run setup-images` (with cleanup) or `npm run setup-images -- --no-cleanup`
 
 ### Image Management
-- **Overview images**: `/public/images/recipes/[category]/[recipe]/overview/`
-- **Step images**: `/public/images/recipes/[category]/[recipe]/steps/`
+- **Overview images**: `/public/images/recipes/[recipe-slug]/overview/`
+- **Step images**: `/public/images/recipes/[recipe-slug]/steps/`
 - **Naming**: `1.jpg`, `2.jpg` for main steps; `1.1.jpg`, `1.2.jpg` for sub-steps
+- **Auto-cleanup**: Unused directories and empty folders are automatically removed
 
 ### Theme System
 The application features a sophisticated theme system with:

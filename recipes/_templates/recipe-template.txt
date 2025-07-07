@@ -1,6 +1,6 @@
 Title: [Recipe Name Here]
 Description: [Brief description of the recipe]
-Category: [Breakfast/Lunch/Dinner/Snacks/Desserts/Beverages]
+Category: [Any category name - creates a folder with that name, or leave empty for root folder]
 Cuisine: [American/Italian/Mexican/Asian/Mediterranean/etc.]
 Difficulty: [Easy/Medium/Hard]
 Servings: [Number of servings]
@@ -10,6 +10,7 @@ Calories: [Approximate calories per serving]
 Dietary: [Vegetarian/Vegan/Gluten-Free/Dairy-Free/None]
 Allergens: [Common allergens or None]
 Cost: [$X]
+YouTube: [YouTube video ID or full URL - optional]
 
 ## Ingredients
 - [Quantity] [ingredient name]

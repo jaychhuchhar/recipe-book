@@ -32,8 +32,21 @@ public/images/recipes/
 Run the setup script to create directories for all existing recipes:
 
 ```bash
-node scripts/setup-recipe-images.js
+# Create directories and clean up unused ones
+npm run setup-images
+
+# Create directories without cleanup
+npm run setup-images -- --no-cleanup
+
+# Get help
+node scripts/setup-recipe-images.js --help
 ```
+
+**The setup script will:**
+- ✅ Create `overview/` and `steps/` directories for each recipe
+- ✅ Remove unused recipe directories (those without corresponding MDX files)
+- ✅ Remove empty subdirectories
+- ✅ Preserve existing images in valid directories
 
 ### Manual Setup
 Create directories manually for a specific recipe:

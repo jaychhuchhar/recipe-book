@@ -3,13 +3,14 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "next build",
-    "dev": "next dev --turbo",
+    "build": "npm run setup-images && npm run convert && next build",
+    "dev": "npm run setup-images && npm run convert && next dev --turbo",
     "start": "next start",
     "postinstall": "fumadocs-mdx",
     "setup-images": "node scripts/setup-recipe-images.js",
     "clean": "bash scripts/clean.sh",
-    "convert-recipe": "node scripts/recipe-converter.js"
+    "convert-recipe": "node scripts/recipe-converter.js",
+    "convert": "node scripts/recipe-converter.js --all"
   },
   "dependencies": {
     "@orama/orama": "^3.1.9",

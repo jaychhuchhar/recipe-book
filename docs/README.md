@@ -8,24 +8,27 @@ This is the complete documentation for the Recipe Book project, covering all imp
 
 ## 🎯 Quick Start Guides
 
-### 1. **[IMAGE_MANAGEMENT.md](./IMAGE_MANAGEMENT.md)**
+### 1. **[RECIPE_CONVERTER.md](./RECIPE_CONVERTER.md)**
+Complete guide to the recipe converter tool that automates text to MDX conversion, batch processing, and cleanup.
+
+### 2. **[IMAGE_MANAGEMENT.md](./IMAGE_MANAGEMENT.md)**
 Complete guide to the image management system including directory structure, naming conventions, and setup procedures.
 
-### 2. **[README-IMAGES.md](./README-IMAGES.md)**
+### 3. **[README-IMAGES.md](./README-IMAGES.md)**
 Quick start guide for developers to understand the image system basics.
 
 ---
 
 ## 🛠️ Feature Documentation
 
-### 3. **[STEP_IMAGES.md](./STEP_IMAGES.md)**
+### 4. **[STEP_IMAGES.md](./STEP_IMAGES.md)**
 Detailed guide for implementing step-by-step images in recipes, including:
 - Component usage patterns
 - Image naming conventions
 - Sub-step support
 - Size options and responsive design
 
-### 4. **[STEP_NUMBERING_ENHANCEMENT.md](./STEP_NUMBERING_ENHANCEMENT.md)**
+### 5. **[STEP_NUMBERING_ENHANCEMENT.md](./STEP_NUMBERING_ENHANCEMENT.md)**
 Comprehensive documentation of the step numbering system featuring:
 - Theme-aware design
 - Perfect alignment techniques
@@ -36,16 +39,16 @@ Comprehensive documentation of the step numbering system featuring:
 
 ## 🔧 Implementation Details
 
-### 5. **[STEP_ALIGNMENT_FIX.md](./STEP_ALIGNMENT_FIX.md)**
+### 6. **[STEP_ALIGNMENT_FIX.md](./STEP_ALIGNMENT_FIX.md)**
 Technical documentation of alignment and color fixes applied to the step numbering system.
 
-### 6. **[PERFECT_ALIGNMENT_ACHIEVED.md](./PERFECT_ALIGNMENT_ACHIEVED.md)**
+### 7. **[PERFECT_ALIGNMENT_ACHIEVED.md](./PERFECT_ALIGNMENT_ACHIEVED.md)**
 Final documentation of the perfect alignment solution, including technical details and testing results.
 
-### 7. **[SIMPLIFIED_IMAGE_STRUCTURE.md](./SIMPLIFIED_IMAGE_STRUCTURE.md)**
+### 8. **[SIMPLIFIED_IMAGE_STRUCTURE.md](./SIMPLIFIED_IMAGE_STRUCTURE.md)**
 Documentation of the simplified image directory structure, removing category folders for easier management.
 
-### 8. **[ISSUE_RESOLVED.md](./ISSUE_RESOLVED.md)**
+### 9. **[ISSUE_RESOLVED.md](./ISSUE_RESOLVED.md)**
 Historical documentation of MDX integration issues and their solutions.
 
 ### 9. **[STEP_NUMBERING_FIX.md](./STEP_NUMBERING_FIX.md)**

@@ -24,15 +24,7 @@ const DEFAULT_VALUES = {
   source: "Home Recipe"
 };
 
-// Category mapping for output directory
-const CATEGORY_DIRS = {
-  breakfast: 'breakfast',
-  lunch: 'lunch', 
-  dinner: 'dinner',
-  snacks: 'snacks',
-  desserts: 'desserts',
-  beverages: 'beverages'
-};
+// No fixed category mapping - use folder names directly
 
 class RecipeConverter {
   constructor(options = {}) {
@@ -108,6 +100,10 @@ class RecipeConverter {
       }
       if (line.toLowerCase().startsWith('cost:')) {
         this.recipe.frontmatter.cost = this.extractValue(line);
+        continue;
+      }
+      if (line.toLowerCase().startsWith('youtube:') || line.toLowerCase().startsWith('video:')) {
+        this.recipe.frontmatter.youtube = this.extractValue(line);
         continue;
       }
 
@@ -272,10 +268,10 @@ class RecipeConverter {
         result += `      ${text}\n`;
         result += `    </InstructionStep>\n`;
         
-        // Add step image if images option is enabled
-        if (this.options.includeImages) {
-          const altText = step.altText || `Step ${step.step}`;
-          const caption = step.altText || `Step ${step.step} illustration`;
+        // Add step image if Alt text is provided
+        if (step.altText) {
+          const altText = step.altText;
+          const caption = step.altText;
           result += `\n    <ServerStepImage stepNumber={${step.step}} alt="${altText}" caption="${caption}" />\n`;
         }
         
@@ -338,68 +334,51 @@ class RecipeConverter {
     return result;
   }
 
+  generateYouTube() {
+    if (!this.recipe.frontmatter.youtube) {
+      return '';
+    }
+
+    // Extract YouTube ID from various URL formats
+    let youtubeId = this.recipe.frontmatter.youtube;
+    
+    // Handle full YouTube URLs
+    const youtubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+    const match = youtubeId.match(youtubeRegex);
+    if (match) {
+      youtubeId = match[1];
+    }
+
+    // Use recipe title for the YouTube component
+    const recipeTitle = this.recipe.frontmatter.title || 'Recipe Video';
+
+    return `\n### External Sources\n\n<YouTube id="${youtubeId}" title="${recipeTitle}" />\n\n`;
+  }
+
   convert() {
     return [
       this.generateFrontmatter(),
       this.generateIngredients(),
       this.generateInstructions(),
       this.generateNotes(),
-      this.generateTags()
+      this.generateTags(),
+      this.generateYouTube()
     ].join('');
   }
 }
 
 // CLI functionality
-function main() {
-  const args = process.argv.slice(2);
+function convertSingleFile(inputFile, options = {}) {
+  const { category, outputFile = null } = options;
   
-  if (args.length === 0 || args.includes('--help') || args.includes('-h')) {
-    console.log(`
-Recipe Converter Tool
-
-Usage:
-  node scripts/recipe-converter.js <input-file> [output-file] [options]
-
-Options:
-  --category <category>  Set the category (breakfast, lunch, dinner, etc.)
-  --images              Include ServerStepImage components for each step
-  --help, -h            Show this help message
-
-Examples:
-  node scripts/recipe-converter.js my-recipe.txt
-  node scripts/recipe-converter.js recipe.txt --category breakfast
-  node scripts/recipe-converter.js input.txt output.mdx --category dinner
-  node scripts/recipe-converter.js recipe.txt --images
-
-Notes:
-  - Images are automatically detected by step number (1.jpg, 2.jpg, etc.)
-  - Use --images flag to include ServerStepImage components in output
-  - Place images in: public/images/recipes/[recipe-name]/steps/[step-number].jpg
-    `);
-    process.exit(0);
-  }
-
-  const inputFile = args[0];
-  const categoryIndex = args.indexOf('--category');
-  const category = categoryIndex !== -1 ? args[categoryIndex + 1] : null;
-  const includeImages = args.includes('--images');
-  
-  let outputFile = args[1];
-  // If second argument is a flag or category, treat it as no output file specified
-  if (outputFile && (outputFile.startsWith('--') || outputFile === category)) {
-    outputFile = null;
-  }
-
   if (!fs.existsSync(inputFile)) {
     console.error(`Error: Input file "${inputFile}" not found.`);
-    process.exit(1);
+    return false;
   }
 
   try {
     const content = fs.readFileSync(inputFile, 'utf-8');
-    const converter = new RecipeConverter({ 
-      includeImages: includeImages 
-    });
+    const converter = new RecipeConverter();
     
     // Override category if specified
     if (category) {
@@ -416,10 +395,12 @@ Notes:
       // Auto-generate output filename and path
       const title = converter.recipe.frontmatter.title || 'untitled-recipe';
       const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-      const recipeCategory = converter.recipe.frontmatter.category?.toLowerCase() || 'main';
-      const categoryDir = CATEGORY_DIRS[recipeCategory] || 'main';
+      const recipeCategory = converter.recipe.frontmatter.category?.toLowerCase() || '';
       
-      const outputDir = path.join(__dirname, '..', 'content', 'docs', categoryDir);
+      // Use category as folder name directly, or root if no category
+      const outputDir = recipeCategory 
+        ? path.join(__dirname, '..', 'content', 'docs', recipeCategory)
+        : path.join(__dirname, '..', 'content', 'docs');
       const outputPath = path.join(outputDir, `${slug}.mdx`);
 
       // Create directory if it doesn't exist
@@ -431,17 +412,275 @@ Notes:
       console.log(`✅ Recipe converted and saved to: ${outputPath}`);
     }
 
-    console.log(`
-Recipe Details:
-- Title: ${converter.recipe.frontmatter.title}
-- Category: ${converter.recipe.frontmatter.category}
-- Ingredients: ${converter.recipe.ingredients.length}
-- Instructions: ${converter.recipe.instructions.length} steps
-- Notes: ${converter.recipe.notes.length}
-    `);
+    console.log(`Recipe Details: ${converter.recipe.frontmatter.title} | ${converter.recipe.frontmatter.category} | ${converter.recipe.ingredients.length} ingredients | ${converter.recipe.instructions.length} steps`);
+    return true;
     
   } catch (error) {
-    console.error('Error converting recipe:', error.message);
+    console.error(`Error converting recipe "${inputFile}":`, error.message);
+    return false;
+  }
+}
+
+function convertAllRecipes(options = {}) {
+  const recipesDir = path.join(__dirname, '..', 'recipes');
+  
+  if (!fs.existsSync(recipesDir)) {
+    console.error(`Error: Recipes directory "${recipesDir}" not found.`);
+    return;
+  }
+
+  console.log('🚀 Converting all recipes from recipes/ folder...\n');
+  
+  // First, clean up orphaned recipes
+  if (options.cleanup !== false) {
+    cleanupOrphanedRecipes(recipesDir);
+  }
+  
+  let totalConverted = 0;
+  let totalFailed = 0;
+
+  function processDirectory(dirPath, categoryFromPath = null) {
+    const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+    
+    for (const entry of entries) {
+      const fullPath = path.join(dirPath, entry.name);
+      
+      if (entry.isDirectory()) {
+        // Recursively process subdirectories, use folder name as category
+        const categoryName = entry.name;
+        console.log(`📁 Processing category: ${categoryName}`);
+        processDirectory(fullPath, categoryName);
+      } else if (entry.isFile() && entry.name.endsWith('.txt')) {
+        // Skip template and README files
+        if (entry.name.includes('template') || entry.name.includes('README') || entry.name.includes('readme')) {
+          console.log(`⏭️  Skipping: ${entry.name}`);
+          continue;
+        }
+        
+        console.log(`📄 Converting: ${entry.name}`);
+        const success = convertSingleFile(fullPath, {
+          category: categoryFromPath
+        });
+        
+        if (success) {
+          totalConverted++;
+        } else {
+          totalFailed++;
+        }
+      }
+    }
+  }
+
+  processDirectory(recipesDir);
+  
+  console.log(`\n📊 Conversion Summary:`);
+  console.log(`✅ Successfully converted: ${totalConverted} recipes`);
+  if (totalFailed > 0) {
+    console.log(`❌ Failed to convert: ${totalFailed} recipes`);
+  }
+  console.log(`\n🎉 All recipes processed!`);
+}
+
+function cleanupOrphanedRecipes(recipesDir) {
+  const contentDir = path.join(__dirname, '..', 'content', 'docs');
+  
+  console.log('🧹 Cleaning up orphaned recipe files...\n');
+  
+  // Get all existing recipe text files with their expected output paths
+  const existingRecipes = new Set();
+  
+  function scanRecipes(dirPath, categoryFromPath = null) {
+    const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+    
+    for (const entry of entries) {
+      const fullPath = path.join(dirPath, entry.name);
+      
+      if (entry.isDirectory()) {
+        scanRecipes(fullPath, entry.name);
+      } else if (entry.isFile() && entry.name.endsWith('.txt')) {
+        // Skip template and README files
+        if (entry.name.includes('template') || entry.name.includes('README') || entry.name.includes('readme')) {
+          continue;
+        }
+        
+        // Read the title to generate the expected slug
+        try {
+          const content = fs.readFileSync(fullPath, 'utf-8');
+          const titleMatch = content.match(/^title:\s*(.+)$/im);
+          const title = titleMatch ? titleMatch[1].trim().replace(/^["']|["']$/g, '') : 'untitled-recipe';
+          const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+          
+          const category = categoryFromPath || '';
+          const expectedPath = category 
+            ? path.join(contentDir, category, `${slug}.mdx`)
+            : path.join(contentDir, `${slug}.mdx`);
+          
+          existingRecipes.add(expectedPath);
+        } catch (error) {
+          console.warn(`⚠️  Could not read recipe file: ${fullPath}`);
+        }
+      }
+    }
+  }
+  
+  scanRecipes(recipesDir);
+  
+  // Find and remove orphaned MDX files
+  let deletedCount = 0;
+  
+  function cleanupCategory(categoryPath) {
+    if (!fs.existsSync(categoryPath)) return;
+    
+    const entries = fs.readdirSync(categoryPath, { withFileTypes: true });
+    
+    for (const entry of entries) {
+      if (entry.isFile() && entry.name.endsWith('.mdx')) {
+        const fullPath = path.join(categoryPath, entry.name);
+        
+        if (!existingRecipes.has(fullPath)) {
+          console.log(`🗑️  Removing orphaned recipe: ${path.relative(contentDir, fullPath)}`);
+          fs.unlinkSync(fullPath);
+          deletedCount++;
+        }
+      }
+    }
+  }
+  
+  function removeEmptyDirectories(dir) {
+    if (!fs.existsSync(dir)) return false;
+    
+    try {
+      const entries = fs.readdirSync(dir, { withFileTypes: true });
+      
+      // First, recursively check subdirectories
+      for (const entry of entries) {
+        if (entry.isDirectory()) {
+          const subDirPath = path.join(dir, entry.name);
+          removeEmptyDirectories(subDirPath);
+        }
+      }
+      
+      // Check if directory is now empty (after potential subdirectory removal)
+      const remainingEntries = fs.readdirSync(dir);
+      if (remainingEntries.length === 0) {
+        console.log(`🗑️  Removing empty category folder: ${path.relative(contentDir, dir)}`);
+        fs.rmdirSync(dir);
+        return true;
+      }
+    } catch (error) {
+      // Silently ignore errors (directory might have been removed already, etc.)
+    }
+    
+    return false;
+  }
+  
+  // Clean up all possible category directories and root
+  function cleanupCategory(dir) {
+    if (!fs.existsSync(dir)) return;
+    
+    const entries = fs.readdirSync(dir, { withFileTypes: true });
+    
+    for (const entry of entries) {
+      const fullPath = path.join(dir, entry.name);
+      
+      if (entry.isDirectory()) {
+        // Recursively clean subdirectories
+        cleanupCategory(fullPath);
+      } else if (entry.isFile() && entry.name.endsWith('.mdx')) {
+        if (!existingRecipes.has(fullPath)) {
+          console.log(`🗑️  Removing orphaned recipe: ${path.relative(contentDir, fullPath)}`);
+          fs.unlinkSync(fullPath);
+          deletedCount++;
+        }
+      }
+    }
+  }
+  
+  // Clean content/docs directory recursively
+  cleanupCategory(contentDir);
+  
+  // Remove empty directories after cleaning up orphaned files
+  let removedDirs = 0;
+  if (removeEmptyDirectories(contentDir)) {
+    removedDirs++;
+  }
+  
+  if (deletedCount > 0 || removedDirs > 0) {
+    const messages = [];
+    if (deletedCount > 0) messages.push(`${deletedCount} orphaned recipe(s)`);
+    if (removedDirs > 0) messages.push(`${removedDirs} empty folder(s)`);
+    console.log(`\n🧹 Cleanup complete: Removed ${messages.join(' and ')}\n`);
+  } else {
+    console.log(`\n✨ No orphaned recipes or empty folders found\n`);
+  }
+}
+
+function main() {
+  const args = process.argv.slice(2);
+  
+  if (args.length === 0 || args.includes('--help') || args.includes('-h')) {
+    console.log(`
+Recipe Converter Tool
+
+Usage:
+  # Convert single file
+  node scripts/recipe-converter.js <input-file> [output-file] [options]
+  
+  # Convert all recipes in recipes/ folder
+  node scripts/recipe-converter.js --all [options]
+
+Options:
+  --all                 Convert all recipes in recipes/ folder (maintains folder structure)
+  --category <category> Set the category (any folder name) - single file only
+  --no-cleanup          Skip cleanup of orphaned recipe files and empty folders (use with --all)
+  --help, -h            Show this help message
+
+Single File Examples:
+  node scripts/recipe-converter.js my-recipe.txt
+  node scripts/recipe-converter.js recipe.txt --category breakfast
+  node scripts/recipe-converter.js input.txt output.mdx --category dinner
+
+Batch Examples:
+  node scripts/recipe-converter.js --all
+  node scripts/recipe-converter.js --all --no-cleanup
+
+Notes:
+  - When using --all, the folder structure in recipes/ is preserved
+  - Any subfolder name in recipes/ becomes a category (e.g., recipes/breakfast/ -> breakfast category)
+  - Recipes without categories are placed in the root of content/docs/
+  - Template files and README files are automatically skipped
+  - Orphaned MDX files (without corresponding .txt files) are automatically removed
+  - Use --no-cleanup to skip orphaned file and empty folder removal
+  - Step images are automatically detected from Alt: lines in instructions
+  - YouTube videos are automatically embedded from YouTube: lines with auto-generated titles
+    `);
+    process.exit(0);
+  }
+
+  // Check if we're doing batch processing
+  if (args.includes('--all')) {
+    const cleanup = !args.includes('--no-cleanup');
+    convertAllRecipes({ cleanup });
+    return;
+  }
+
+  // Single file processing (existing logic)
+  const inputFile = args[0];
+  const categoryIndex = args.indexOf('--category');
+  const category = categoryIndex !== -1 ? args[categoryIndex + 1] : null;
+  
+  let outputFile = args[1];
+  // If second argument is a flag or category, treat it as no output file specified
+  if (outputFile && (outputFile.startsWith('--') || outputFile === category)) {
+    outputFile = null;
+  }
+
+  const success = convertSingleFile(inputFile, {
+    category,
+    outputFile
+  });
+
+  if (!success) {
     process.exit(1);
   }
 }

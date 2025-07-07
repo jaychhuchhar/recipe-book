@@ -109,9 +109,148 @@ Usage in MDX:
 }
 
 /**
+ * Get all existing recipe slugs from image directories
+ */
+function getExistingImageDirectories() {
+  const recipeDirs = [];
+  
+  try {
+    if (fs.existsSync(IMAGES_DIR)) {
+      const items = fs.readdirSync(IMAGES_DIR);
+      
+      for (const item of items) {
+        const fullPath = path.join(IMAGES_DIR, item);
+        const stat = fs.statSync(fullPath);
+        
+        if (stat.isDirectory()) {
+          recipeDirs.push(item);
+        }
+      }
+    }
+  } catch (error) {
+    console.warn(`Warning: Could not read images directory:`, error.message);
+  }
+  
+  return recipeDirs;
+}
+
+/**
+ * Remove unused recipe directories and empty folders
+ */
+function cleanupUnusedImages(validRecipeSlugs) {
+  console.log('\n🧹 Cleaning up unused image directories...');
+  
+  const existingDirs = getExistingImageDirectories();
+  const unusedDirs = existingDirs.filter(dir => !validRecipeSlugs.includes(dir));
+  
+  let deletedCount = 0;
+  
+  for (const unusedDir of unusedDirs) {
+    const dirPath = path.join(IMAGES_DIR, unusedDir);
+    
+    try {
+      // Remove directory and all contents recursively
+      fs.rmSync(dirPath, { recursive: true, force: true });
+      console.log(`🗑️  Removed unused directory: ${unusedDir}`);
+      deletedCount++;
+    } catch (error) {
+      console.warn(`⚠️  Failed to remove directory ${unusedDir}:`, error.message);
+    }
+  }
+  
+  // Remove empty subdirectories in remaining recipe folders
+  const remainingDirs = existingDirs.filter(dir => validRecipeSlugs.includes(dir));
+  let emptyDirsRemoved = 0;
+  
+  for (const recipeDir of remainingDirs) {
+    const recipePath = path.join(IMAGES_DIR, recipeDir);
+    
+    try {
+      const subDirs = fs.readdirSync(recipePath, { withFileTypes: true })
+        .filter(dirent => dirent.isDirectory())
+        .map(dirent => dirent.name);
+      
+      for (const subDir of subDirs) {
+        const subDirPath = path.join(recipePath, subDir);
+        const contents = fs.readdirSync(subDirPath);
+        
+        // Remove if empty or contains only .gitkeep files
+        const hasActualFiles = contents.some(file => !file.startsWith('.'));
+        
+        if (!hasActualFiles) {
+          fs.rmSync(subDirPath, { recursive: true, force: true });
+          console.log(`🗑️  Removed empty subdirectory: ${recipeDir}/${subDir}`);
+          emptyDirsRemoved++;
+        }
+      }
+      
+      // Check if recipe directory itself is empty
+      const recipeContents = fs.readdirSync(recipePath);
+      const hasActualContent = recipeContents.some(item => {
+        const itemPath = path.join(recipePath, item);
+        const isDir = fs.statSync(itemPath).isDirectory();
+        
+        if (isDir) {
+          const dirContents = fs.readdirSync(itemPath);
+          return dirContents.some(file => !file.startsWith('.'));
+        }
+        return !item.startsWith('.');
+      });
+      
+      if (!hasActualContent) {
+        fs.rmSync(recipePath, { recursive: true, force: true });
+        console.log(`🗑️  Removed empty recipe directory: ${recipeDir}`);
+        deletedCount++;
+      }
+      
+    } catch (error) {
+      console.warn(`⚠️  Error checking directory ${recipeDir}:`, error.message);
+    }
+  }
+  
+  if (deletedCount > 0 || emptyDirsRemoved > 0) {
+    const messages = [];
+    if (deletedCount > 0) messages.push(`${deletedCount} unused recipe directory(ies)`);
+    if (emptyDirsRemoved > 0) messages.push(`${emptyDirsRemoved} empty subdirectory(ies)`);
+    console.log(`\n🧹 Cleanup complete: Removed ${messages.join(' and ')}`);
+  } else {
+    console.log('\n✨ No unused directories or empty folders found');
+  }
+}
+
+/**
  * Main function
  */
 function main() {
+  const args = process.argv.slice(2);
+  const skipCleanup = args.includes('--no-cleanup');
+  
+  if (args.includes('--help') || args.includes('-h')) {
+    console.log(`
+Recipe Image Setup Tool
+
+Usage:
+  node scripts/setup-recipe-images.js [options]
+  npm run setup-images [-- options]
+
+Options:
+  --no-cleanup     Skip cleanup of unused image directories
+  --help, -h       Show this help message
+
+Description:
+  - Creates image directories for all recipes found in content/docs/
+  - Removes unused recipe image directories that no longer have corresponding recipes
+  - Removes empty subdirectories (overview/steps folders with no actual images)
+  - Creates overview/ and steps/ folders for each recipe
+
+Examples:
+  npm run setup-images
+  npm run setup-images -- --no-cleanup
+  node scripts/setup-recipe-images.js --no-cleanup
+    `);
+    process.exit(0);
+  }
+  
   console.log('🍳 Setting up recipe image directories...\n');
   
   // Create base images directory
@@ -126,8 +265,20 @@ function main() {
   const recipeFiles = getAllRecipeFiles();
   console.log(`Found ${recipeFiles.length} recipe files\n`);
   
+  // Get valid recipe slugs for cleanup
+  const validRecipeSlugs = recipeFiles.map(file => getRecipeSlug(file));
+  
+  // Clean up unused directories first (unless skipped)
+  if (!skipCleanup) {
+    cleanupUnusedImages(validRecipeSlugs);
+  } else {
+    console.log('⏭️  Skipping cleanup (--no-cleanup flag detected)\n');
+  }
+  
   let successCount = 0;
   const failed = [];
+  
+  console.log(`\n📁 Creating directories for current recipes...`);
   
   // Create directories for each recipe
   for (const file of recipeFiles) {
@@ -139,6 +290,12 @@ function main() {
     } else {
       failed.push(recipeSlug);
     }
+  }
+  
+  // Cleanup unused directories and empty folders (unless skipped)
+  if (!skipCleanup) {
+    const validSlugs = recipeFiles.map(getRecipeSlug);
+    cleanupUnusedImages(validSlugs);
   }
   
   // Summary
@@ -165,4 +322,10 @@ if (require.main === module) {
   main();
 }
 
-module.exports = { createRecipeDirectories, getAllRecipeFiles, getRecipeSlug };
+module.exports = { 
+  createRecipeDirectories, 
+  getAllRecipeFiles, 
+  getRecipeSlug, 
+  getExistingImageDirectories, 
+  cleanupUnusedImages 
+};
