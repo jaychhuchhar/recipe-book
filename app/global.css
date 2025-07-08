@@ -1,3 +1,17 @@
 @import 'tailwindcss';
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
+
+/* Targeted fix for ingredient category bullets without breaking other content */
+.recipe-ingredients-container .ingredient-category-box {
+  display: block !important;
+  list-style: none !important;
+  list-style-type: none !important;
+  margin-left: 0 !important;
+  padding-left: 0 !important;
+}
+
+.recipe-ingredients-container .ingredient-category-box::before {
+  display: none !important;
+  content: none !important;
+}

@@ -62,8 +62,47 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
       '(max-width:599px)': { slides: { perView: 1, spacing: 16 } },
     },
     initial: 0,
-    loop: false,
-  });
+    loop: true, // Enable looping for auto-scroll
+  }, [
+    // Conditional auto-scroll plugin - only when content overflows
+    (slider) => {
+      let timeout: ReturnType<typeof setTimeout>;
+      let mouseOver = false;
+      
+      function clearNextTimeout() {
+        clearTimeout(timeout);
+      }
+      
+      function nextTimeout() {
+        clearTimeout(timeout);
+        if (mouseOver) return;
+        
+        // Only auto-scroll if there are more recipes than can fit in current view
+        const currentVisibleCount = getVisibleCount();
+        if (total <= currentVisibleCount) return; // Don't auto-scroll if all recipes fit
+        
+        timeout = setTimeout(() => {
+          slider.next();
+        }, 5000); // 5 seconds for featured recipes (longer than image carousel)
+      }
+      
+      slider.on("created", () => {
+        slider.container.addEventListener("mouseover", () => {
+          mouseOver = true;
+          clearNextTimeout();
+        });
+        slider.container.addEventListener("mouseout", () => {
+          mouseOver = false;
+          nextTimeout();
+        });
+        nextTimeout();
+      });
+      
+      slider.on("dragStarted", clearNextTimeout);
+      slider.on("animationEnded", nextTimeout);
+      slider.on("updated", nextTimeout);
+    },
+  ]);
 
   React.useEffect(() => {
     setHasMounted(true);

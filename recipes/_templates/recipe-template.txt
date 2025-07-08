@@ -9,7 +9,7 @@ Cook Time: [X Minutes]
 Calories: [Approximate calories per serving]
 Dietary: [Vegetarian/Vegan/Gluten-Free/Dairy-Free/None]
 Allergens: [Common allergens or None]
-Cost: [$X]
+Cost: [Rs. X]
 YouTube: [YouTube video ID or full URL - optional]
 
 ## Ingredients
@@ -17,6 +17,18 @@ YouTube: [YouTube video ID or full URL - optional]
 - [Quantity] [ingredient name] 
 - [Quantity] [ingredient name]
 - [Add more ingredients as needed]
+
+## Ingredients (Alternative: Categorized for Complex Recipes)
+### [Category Name - e.g., "Main Ingredients"]
+- [Quantity] [ingredient name]
+- [Quantity] [ingredient name] 
+
+### [Category Name - e.g., "Spices & Seasonings"]
+- [Quantity] [ingredient name]
+- [Quantity] [ingredient name]
+
+### [Category Name - e.g., "For Garnish"]
+- [Quantity] [ingredient name]
 
 ## Instructions
 

@@ -31,6 +31,7 @@ class RecipeConverter {
     this.recipe = {
       frontmatter: {},
       ingredients: [],
+      ingredientCategories: [], // For categorized ingredients
       instructions: [],
       notes: [],
       tags: []
@@ -42,6 +43,7 @@ class RecipeConverter {
     const lines = content.split('\n').map(line => line.trim());
     let currentSection = null;
     let currentInstructionSection = null;
+    let currentIngredientCategory = null;
     let stepNumber = 1;
 
     for (let i = 0; i < lines.length; i++) {
@@ -133,12 +135,31 @@ class RecipeConverter {
         continue;
       }
 
+      // Ingredient category headers (e.g., "### Spices", "### Vegetables")
+      if (currentSection === 'ingredients' && line.startsWith('###')) {
+        currentIngredientCategory = line.replace(/^#+\s*/, '').trim();
+        continue;
+      }
+
       // Parse content based on current section
       switch (currentSection) {
         case 'ingredients':
           if ((line.startsWith('-') || line.startsWith('*') || line.match(/^\d+\./) || line.match(/^[a-zA-Z]/)) 
               && !line.toLowerCase().startsWith('alt:')) {
-            this.recipe.ingredients.push(this.cleanListItem(line));
+            const ingredient = this.cleanListItem(line);
+            
+            if (currentIngredientCategory) {
+              // Add to categorized ingredients
+              let category = this.recipe.ingredientCategories.find(cat => cat.title === currentIngredientCategory);
+              if (!category) {
+                category = { title: currentIngredientCategory, ingredients: [] };
+                this.recipe.ingredientCategories.push(category);
+              }
+              category.ingredients.push(ingredient);
+            } else {
+              // Add to main ingredients list
+              this.recipe.ingredients.push(ingredient);
+            }
           }
           break;
           
@@ -233,13 +254,42 @@ class RecipeConverter {
   }
 
   generateIngredients() {
-    if (this.recipe.ingredients.length === 0) return '';
+    if (this.recipe.ingredients.length === 0 && this.recipe.ingredientCategories.length === 0) return '';
     
-    let result = '### Ingredients\n\n<RecipeIngredients>\n';
-    this.recipe.ingredients.forEach(ingredient => {
-      result += `  <>${ingredient}</>\n`;
-    });
-    result += '</RecipeIngredients>\n\n';
+    let result = '### Ingredients\n\n';
+    
+    // Handle categorized ingredients
+    if (this.recipe.ingredientCategories.length > 0) {
+      result += '<RecipeIngredients categories={[\n';
+      this.recipe.ingredientCategories.forEach((category, index) => {
+        result += `  {\n    title: "${category.title}",\n    ingredients: [\n`;
+        category.ingredients.forEach((ingredient, ingredientIndex) => {
+          const comma = ingredientIndex < category.ingredients.length - 1 ? ',' : '';
+          result += `      "${ingredient.replace(/"/g, '\\"')}"${comma}\n`;
+        });
+        const categoryComma = index < this.recipe.ingredientCategories.length - 1 ? ',' : '';
+        result += `    ]\n  }${categoryComma}\n`;
+      });
+      
+      // Add any non-categorized ingredients at the end
+      if (this.recipe.ingredients.length > 0) {
+        result += `,\n  {\n    title: "Other Ingredients",\n    ingredients: [\n`;
+        this.recipe.ingredients.forEach((ingredient, index) => {
+          const comma = index < this.recipe.ingredients.length - 1 ? ',' : '';
+          result += `      "${ingredient.replace(/"/g, '\\"')}"${comma}\n`;
+        });
+        result += `    ]\n  }\n`;
+      }
+      result += ']} />\n\n';
+    } else {
+      // Handle non-categorized ingredients (original behavior)
+      result += '<RecipeIngredients>\n';
+      this.recipe.ingredients.forEach(ingredient => {
+        result += `<>${ingredient}</>\n`;
+      });
+      result += '</RecipeIngredients>\n\n';
+    }
+    
     return result;
   }
 
@@ -290,7 +340,13 @@ class RecipeConverter {
     let result = text;
     const processedWords = new Set();
     
-    this.recipe.ingredients.forEach(ingredient => {
+    // Collect all ingredients from both regular and categorized lists
+    const allIngredients = [...this.recipe.ingredients];
+    this.recipe.ingredientCategories.forEach(category => {
+      allIngredients.push(...category.ingredients);
+    });
+    
+    allIngredients.forEach(ingredient => {
       const words = ingredient.split(' ').filter(word => word.length > 3);
       words.forEach(word => {
         const cleanWord = word.replace(/[^a-zA-Z]/g, '').toLowerCase();
@@ -412,7 +468,11 @@ function convertSingleFile(inputFile, options = {}) {
       console.log(`✅ Recipe converted and saved to: ${outputPath}`);
     }
 
-    console.log(`Recipe Details: ${converter.recipe.frontmatter.title} | ${converter.recipe.frontmatter.category} | ${converter.recipe.ingredients.length} ingredients | ${converter.recipe.instructions.length} steps`);
+    // Count total ingredients
+    const totalIngredients = converter.recipe.ingredients.length + 
+      converter.recipe.ingredientCategories.reduce((total, cat) => total + cat.ingredients.length, 0);
+    
+    console.log(`Recipe Details: ${converter.recipe.frontmatter.title} | ${converter.recipe.frontmatter.category} | ${totalIngredients} ingredients | ${converter.recipe.instructions.length} steps`);
     return true;
     
   } catch (error) {
@@ -446,6 +506,12 @@ function convertAllRecipes(options = {}) {
       const fullPath = path.join(dirPath, entry.name);
       
       if (entry.isDirectory()) {
+        // Skip template directories entirely
+        if (entry.name.startsWith('_templates') || entry.name.includes('template')) {
+          console.log(`⏭️  Skipping template directory: ${entry.name}`);
+          continue;
+        }
+        
         // Recursively process subdirectories, use folder name as category
         const categoryName = entry.name;
         console.log(`📁 Processing category: ${categoryName}`);
@@ -496,6 +562,10 @@ function cleanupOrphanedRecipes(recipesDir) {
       const fullPath = path.join(dirPath, entry.name);
       
       if (entry.isDirectory()) {
+        // Skip template directories entirely
+        if (entry.name.startsWith('_templates') || entry.name.includes('template')) {
+          continue;
+        }
         scanRecipes(fullPath, entry.name);
       } else if (entry.isFile() && entry.name.endsWith('.txt')) {
         // Skip template and README files
@@ -648,6 +718,7 @@ Notes:
   - When using --all, the folder structure in recipes/ is preserved
   - Any subfolder name in recipes/ becomes a category (e.g., recipes/breakfast/ -> breakfast category)
   - Recipes without categories are placed in the root of content/docs/
+  - Template directories (starting with _templates) are automatically skipped
   - Template files and README files are automatically skipped
   - Orphaned MDX files (without corresponding .txt files) are automatically removed
   - Use --no-cleanup to skip orphaned file and empty folder removal

@@ -84,3 +84,47 @@ See `_templates/recipe-template.txt` for the complete format including:
 - **Automation**: Generate complex MDX with custom components
 - **Consistency**: All recipes follow the same structure
 - **Reusability**: Source files can be used for other formats (PDF, etc.)
+
+## Ingredient Organization
+
+#### Simple Ingredients (recommended for most recipes)
+For recipes with 10 or fewer ingredients, use the simple format:
+
+```
+## Ingredients
+- 2 cups flour
+- 1 cup milk
+- 1 tsp salt
+```
+
+#### Categorized Ingredients (for complex recipes)
+For complex recipes with many ingredients (15+), you can organize them into categories:
+
+```
+## Ingredients
+
+### Main Ingredients
+- 2 cups basmati rice
+- 1 kg chicken
+
+### Spices & Seasonings
+- 1 tsp turmeric
+- 2 bay leaves
+- Salt to taste
+
+### For Garnish
+- Fresh cilantro
+- Lemon wedges
+```
+
+**When to use categories:**
+- Recipes with 15+ ingredients
+- Multi-course or complex preparations
+- When ingredients serve distinct purposes
+- Traditional recipes with natural groupings (like biryani, complex baking)
+
+**When to keep it simple:**
+- Quick recipes
+- 10 or fewer ingredients
+- Single-purpose preparations
+- Everyday cooking

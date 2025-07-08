@@ -6,7 +6,7 @@ import { RecipeStepImage } from '@/components/RecipeStepImage';
 import { AutoStepImage } from '@/components/AutoStepImage';
 import { ServerStepImage } from '@/components/ServerStepImage';
 import { RecipeInstructions, Section as RecipeInstructionsSection, Step as RecipeInstructionsStep } from '@/components/RecipeInstructions';
-import { RecipeIngredients } from '@/components/RecipeIngredients';
+import { RecipeIngredients, IngredientCategory } from '@/components/RecipeIngredients';
 import { RecipeNotes } from '@/components/RecipeNotes';
 import { RecipeTags } from '@/components/RecipeTags';
 import { RecipeMeta } from '@/components/RecipeMeta';
@@ -31,6 +31,7 @@ export function getMDXComponents(components?: MDXComponents): MDXComponents {
     RecipeInstructionsSection,
     RecipeInstructionsStep,
     RecipeIngredients,
+    IngredientCategory,
     RecipeNotes,
     RecipeTags,
     RecipeMeta,
@@ -65,6 +66,7 @@ export function getMDXComponentsWithRecipeSlug(
     RecipeInstructionsSection,
     RecipeInstructionsStep,
     RecipeIngredients,
+    IngredientCategory,
     RecipeNotes,
     RecipeTags,
     RecipeMeta,
