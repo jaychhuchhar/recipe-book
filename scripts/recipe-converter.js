@@ -167,7 +167,20 @@ class RecipeConverter {
           // Check for alt text line (starts with "Alt:")
           if (line.toLowerCase().startsWith('alt:') && this.recipe.instructions.length > 0) {
             const lastInstruction = this.recipe.instructions[this.recipe.instructions.length - 1];
-            lastInstruction.altText = line.substring(4).trim();
+            const altText = line.substring(4).trim();
+            
+            // Initialize altTexts array if it doesn't exist
+            if (!lastInstruction.altTexts) {
+              lastInstruction.altTexts = [];
+            }
+            
+            // Support for backward compatibility (single altText)
+            if (!lastInstruction.altText) {
+              lastInstruction.altText = altText;
+            }
+            
+            // Add to array for multiple images
+            lastInstruction.altTexts.push(altText);
           }
           else if (line.startsWith('-') || line.startsWith('*') || line.match(/^\d+\./) || line.match(/^[a-zA-Z]/)) {
             this.recipe.instructions.push({
@@ -318,11 +331,26 @@ class RecipeConverter {
         result += `      ${text}\n`;
         result += `    </InstructionStep>\n`;
         
-        // Add step image if Alt text is provided
-        if (step.altText) {
+        // Add step images if Alt text is provided
+        if (step.altTexts && step.altTexts.length > 1) {
+          // Multiple images with dash notation (step-1, step-2, etc.)
+          step.altTexts.forEach((altText, index) => {
+            const stepImageNumber = `${step.step}-${index + 1}`;
+            const caption = altText;
+            result += `\n    <ServerStepImage stepNumber="${stepImageNumber}" alt="${altText}" caption="${caption}" />\n`;
+          });
+        } else if (step.altTexts && step.altTexts.length === 1) {
+          // Single image from altTexts array - use zero-padded step number to match 01.jpg, 02.jpg, etc.
+          const altText = step.altTexts[0];
+          const caption = altText;
+          const stepNumber = step.step.toString().padStart(2, '0');
+          result += `\n    <ServerStepImage stepNumber="${stepNumber}" alt="${altText}" caption="${caption}" />\n`;
+        } else if (step.altText) {
+          // Single image (backward compatibility) - use zero-padded step number
           const altText = step.altText;
           const caption = step.altText;
-          result += `\n    <ServerStepImage stepNumber={${step.step}} alt="${altText}" caption="${caption}" />\n`;
+          const stepNumber = step.step.toString().padStart(2, '0');
+          result += `\n    <ServerStepImage stepNumber="${stepNumber}" alt="${altText}" caption="${caption}" />\n`;
         }
         
         if (step !== steps[steps.length - 1]) result += '\n';

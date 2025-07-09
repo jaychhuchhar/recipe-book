@@ -77,9 +77,8 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
         clearTimeout(timeout);
         if (mouseOver) return;
         
-        // Only auto-scroll if there are more recipes than can fit in current view
-        const currentVisibleCount = getVisibleCount();
-        if (total <= currentVisibleCount) return; // Don't auto-scroll if all recipes fit
+        // Auto-scroll if there are more than 2 recipes to ensure it works on all screen sizes
+        if (total <= 2) return; // Only disable if very few recipes
         
         timeout = setTimeout(() => {
           slider.next();

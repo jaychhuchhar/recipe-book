@@ -34,12 +34,54 @@ export function getRecipeImages(recipeSlug: string, type: 'overview' | 'steps'):
         return IMAGE_EXTENSIONS.includes(ext);
       })
       .sort((a, b) => {
-        // Sort numerically if files are numbered
-        const aNum = parseInt(a.match(/(\d+)/)?.[1] || '0');
-        const bNum = parseInt(b.match(/(\d+)/)?.[1] || '0');
-        return aNum - bNum;
+        // Special handling for overview images - prioritize certain names
+        if (type === 'overview') {
+          const priorityOrder = ['main', 'hero', 'final'];
+          const aName = path.basename(a, path.extname(a)).toLowerCase();
+          const bName = path.basename(b, path.extname(b)).toLowerCase();
+          
+          const aPriority = priorityOrder.indexOf(aName);
+          const bPriority = priorityOrder.indexOf(bName);
+          
+          // If both have priority, sort by priority order
+          if (aPriority !== -1 && bPriority !== -1) {
+            return aPriority - bPriority;
+          }
+          
+          // If only one has priority, it comes first
+          if (aPriority !== -1) return -1;
+          if (bPriority !== -1) return 1;
+        }
+        
+        // Enhanced sorting to handle multiple step image naming patterns:
+        // - 1.jpg, 2.jpg, 3.jpg (non-padded)
+        // - 01.jpg, 02.jpg, 03.jpg (zero-padded)
+        // - 1.1.jpg, 1.2.jpg (sub-steps with dots, non-padded)
+        // - 01.1.jpg, 01.2.jpg (sub-steps with dots, zero-padded)
+        // - 15-1.jpg, 15-2.jpg (sub-steps with dashes)
+        // - step-1.jpg, step-01.jpg (legacy with prefix)
+        const aMatch = a.match(/(?:step-)?0*(\d+)(?:[-.]0*(\d+))?/i);
+        const bMatch = b.match(/(?:step-)?0*(\d+)(?:[-.]0*(\d+))?/i);
+        
+        if (aMatch && bMatch) {
+          const aMain = parseInt(aMatch[1]);
+          const bMain = parseInt(bMatch[1]);
+          
+          // Compare main step numbers
+          if (aMain !== bMain) {
+            return aMain - bMain;
+          }
+          
+          // If main numbers are equal, compare sub-step numbers
+          const aSub = parseInt(aMatch[2] || '0');
+          const bSub = parseInt(bMatch[2] || '0');
+          return aSub - bSub;
+        }
+        
+        // Fallback to alphabetical sorting if no numbers found
+        return a.localeCompare(b);
       })
-      .map(file => `/images/recipes/${recipeSlug}/${type}/${file}`);
+      .map((file: string) => `/images/recipes/${recipeSlug}/${type}/${file}`);
     
     return imageFiles;
   } catch (error) {
@@ -73,7 +115,7 @@ export function getRecipesWithImages(): string[] {
     }
     
     return fs.readdirSync(recipesPath)
-      .filter(item => {
+      .filter((item: string) => {
         const itemPath = path.join(recipesPath, item);
         return fs.statSync(itemPath).isDirectory();
       });

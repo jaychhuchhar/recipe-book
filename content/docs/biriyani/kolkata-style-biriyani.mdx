@@ -3,7 +3,7 @@ title: "Kolkata Style Biriyani"
 description: "Kolkata Style Chicken Biriyani with Egg and Potato"
 rating: "4.5"
 author: "The IT Chef"
-date: "2025-07-08"
+date: "2025-07-09"
 category: "Biriyani"
 cuisine: "Indian (Kolkata)"
 difficulty: "Medium"
@@ -13,7 +13,7 @@ cookTime: "45 Minutes"
 totalTime: "75 Minutes"
 calories: "N/A"
 dietary: "Non Vegeterian"
-allergens: "None"
+allergens: "Dairy"
 cost: "N/A"
 source: "Home Recipe"
 tags:
@@ -25,43 +25,65 @@ tags:
 
 <RecipeIngredients categories={[
   {
-    title: "Rice & Main Ingredients",
+    title: "Rice",
     ingredients: [
-      "2 cups basmati rice",
-      "1 kg chicken, cut into pieces",
-      "4 eggs",
-      "4 medium potatoes"
+      "2 Cup Basmati Rice",
+      "2 Bay Leaves",
+      "4 Green Cardamom Pods (Elaichi)",
+      "1 Star Anise",
+      "1 Cinnamon Stick",
+      "4 to 5 Cloves",
+      "1/2 Lemon (Sliced)",
+      "Salt to Taste",
+      "4 Cup Water",
+      "1 tbsp Ghee"
     ]
   },
   {
-    title: "Aromatics & Vegetables",
+    title: "Masala Gravy",
     ingredients: [
-      "4 large onions, thinly sliced",
-      "2 tbsp ginger-garlic paste",
-      "1/4 cup mint leaves",
-      "1/4 cup fried onions"
+      "6 Onion (Sliced)",
+      "5 to 6 Tbsp Oil",
+      "1 to 2 Tbsp Ghee",
+      "4 to 6 Egg",
+      "4 to 6 Medium Sized Potato (Big Chunks)"
     ]
   },
   {
-    title: "Spices & Seasonings",
+    title: "Saffron Milk",
     ingredients: [
-      "1 tsp red chili powder",
-      "1/2 tsp turmeric powder",
-      "1 tsp garam masala powder",
-      "4-5 green cardamom",
-      "2 black cardamom",
-      "4-5 cloves",
-      "2 bay leaves",
-      "1-inch cinnamon stick",
-      "Salt to taste"
+      "Saffron Strands (Kesar)",
+      "4 tbsp milk"
     ]
   },
   {
-    title: "Dairy & Liquids",
+    title: "Biryani Masala",
     ingredients: [
-      "1 cup plain yogurt",
-      "1/4 tsp saffron soaked in 1/4 cup warm milk",
-      "Oil for frying"
+      "2 Cinnamon Stick",
+      "15 to 16 Green Cardamom Pods (Elaichi)",
+      "2 Star Anise",
+      "10 Cloves",
+      "1/3 Nutmeg",
+      "1 Mace Spice (Javitri)",
+      "1 Black Cardamom Pod (Elaichi)",
+      "1 tsp Whole Jeera",
+      "1 tsp Fennel Seed",
+      "1 tsp Black Pepper Powder",
+      "1 tsp White Pepper Powder"
+    ]
+  },
+  {
+    title: "Chicken Marinade",
+    ingredients: [
+      "1 Kg Chicken Pieces (Thighs, Curry Cut, Legs)",
+      "2 tbsp Garlic Paste",
+      "1 tsp Ginger Paste",
+      "2 tbsp Red Chilli Powder",
+      "1 tsp Turmeric Powder",
+      "1 tbsp Coriander-Jeera Powder",
+      "20-25 Fresh Mint Leaves",
+      "5 tbsp Greek Yogurt Or Thick Curd",
+      "Salt to Taste"
     ]
   }
 ]} />
@@ -69,92 +91,139 @@ tags:
 ### Instructions
 
 <InstructionsContainer>
-  <InstructionsSection title="Prepare Ingredients">
+  <InstructionsSection title="Chicken Marinade">
     <InstructionStep stepNumber={1}>
-      Wash and soak 2 <strong>cups</strong> <strong>basmati</strong> <strong>rice</strong> for 30 minutes
+      Roast all the <strong>whole</strong> spices in a pan. Cool them down and grind them to a <strong>powder</strong>.
     </InstructionStep>
 
-    <ServerStepImage stepNumber={1} alt="Basmati rice soaking in water" caption="Basmati rice soaking in water" />
+    <ServerStepImage stepNumber="01" alt="Roast Whole Spices" caption="Roast Whole Spices" />
 
     <InstructionStep stepNumber={2}>
-      Cut 1 kg <strong>chicken</strong> <strong>into</strong> <strong>medium</strong> <strong>pieces</strong> and marinate with <strong>yogurt</strong> and spices
+      In a big bowl, add <strong>chicken</strong>, all the spices and <strong>yogurt</strong>. Mix well, cover and let it rest for at least an hour.
     </InstructionStep>
 
-    <ServerStepImage stepNumber={2} alt="Marinated chicken pieces in a bowl" caption="Marinated chicken pieces in a bowl" />
-
+    <ServerStepImage stepNumber="02" alt="Chicken Marinade" caption="Chicken Marinade" />
+  </InstructionsSection>
+  <InstructionsSection title="Saffron Milk">
     <InstructionStep stepNumber={3}>
-      Slice 4 <strong>large</strong> <strong>onions</strong> <strong>thinly</strong> and deep fry until golden brown
+      In a bowl, mix <strong>saffron</strong> <strong>strands</strong> and lukewarm or room temperature <strong>milk</strong> and set it aside for later.
     </InstructionStep>
-
-    <ServerStepImage stepNumber={3} alt="Golden brown fried onions on paper towel" caption="Golden brown fried onions on paper towel" />
-
+  </InstructionsSection>
+  <InstructionsSection title="Eggs and Potato">
     <InstructionStep stepNumber={4}>
-      Boil 4 <strong>eggs</strong> and 4 <strong>potatoes</strong> separately until cooked
+      Boil the eggs, peel and keep them aside for later.
     </InstructionStep>
-
-    <ServerStepImage stepNumber={4} alt="Boiled eggs and potatoes cooling down" caption="Boiled eggs and potatoes cooling down" />
 
     <InstructionStep stepNumber={5}>
-      Prepare biryani <strong>masala</strong> by grinding whole spices
+      Use a fork to poke holes all over the potatoes so they cook thoroughly and the masala penetrates well.
     </InstructionStep>
 
-    <ServerStepImage stepNumber={5} alt="Fresh ground biryani masala powder" caption="Fresh ground biryani masala powder" />
-  </InstructionsSection>
-  <InstructionsSection title="Cook the Dish">
     <InstructionStep stepNumber={6}>
-      Heat oil in heavy-bottomed pot and add whole spices
+      Soak the potatoes in <strong>salt</strong> and <strong>turmeric</strong> <strong>water</strong> for about 10 mins.
     </InstructionStep>
-
-    <ServerStepImage stepNumber={6} alt="Whole spices sizzling in hot oil" caption="Whole spices sizzling in hot oil" />
 
     <InstructionStep stepNumber={7}>
-      Add marinated <strong>chicken</strong> and cook until 70% done
+      Potatoes can be fried in oil or AirFried (25 Min at 180 C).
     </InstructionStep>
-
-    <ServerStepImage stepNumber={7} alt="Chicken cooking in the pot with spices" caption="Chicken cooking in the pot with spices" />
 
     <InstructionStep stepNumber={8}>
-      In separate pot, boil water with whole spices and <strong>salt</strong>
+      Once ready keep them aside for later.
     </InstructionStep>
-
-    <ServerStepImage stepNumber={8} alt="Large pot of boiling spiced water" caption="Large pot of boiling spiced water" />
-
+  </InstructionsSection>
+  <InstructionsSection title="Rice Preparation">
     <InstructionStep stepNumber={9}>
-      Add <strong>soaked</strong> <strong>rice</strong> to boiling water and cook until 70% done
+      In a big pan or kadhai, add <strong>water</strong> and all the spices.
     </InstructionStep>
 
-    <ServerStepImage stepNumber={9} alt="Rice cooking in boiling spiced water" caption="Rice cooking in boiling spiced water" />
+    <ServerStepImage stepNumber="09" alt="Infusing Water with Spices" caption="Infusing Water with Spices" />
 
     <InstructionStep stepNumber={10}>
-      Layer the partially cooked <strong>rice</strong> over <strong>chicken</strong>
+      Let the <strong>water</strong> boil for a few minutes so that spices are infused. Add <strong>ghee</strong> for aroma.
     </InstructionStep>
 
-    <ServerStepImage stepNumber={10} alt="Rice being layered over chicken in pot" caption="Rice being layered over chicken in pot" />
-  </InstructionsSection>
-  <InstructionsSection title="Final Assembly and Dum Cooking">
+    <ServerStepImage stepNumber="10" alt="Adding Ghee for Aroma" caption="Adding Ghee for Aroma" />
+
     <InstructionStep stepNumber={11}>
-      Sprinkle <strong>fried</strong> <strong>onions</strong>, <strong>mint</strong> <strong>leaves</strong>, and <strong>saffron</strong> <strong>soaked</strong> in <strong>milk</strong>
+      Use a strainer and remove the <strong>whole</strong> spices.
     </InstructionStep>
-
-    <ServerStepImage stepNumber={11} alt="Garnishing the biryani with fried onions and herbs" caption="Garnishing the biryani with fried onions and herbs" />
 
     <InstructionStep stepNumber={12}>
-      Add boiled <strong>eggs</strong> and <strong>potatoes</strong> between <strong>rice</strong> layers
+      Add <strong>rice</strong> and cook at high flame for a few minutes.
     </InstructionStep>
-
-    <ServerStepImage stepNumber={12} alt="Eggs and potatoes arranged in biryani layers" caption="Eggs and potatoes arranged in biryani layers" />
 
     <InstructionStep stepNumber={13}>
-      Cover pot with aluminum foil, then place tight-fitting lid
+      Set the flame to low, close the lid and cook for additional 5 to 10 minutes or until <strong>rice</strong> is about 70% to 80% cooked. You can check by pressing a grain in the palm. It should have just a little bit of bite remaining.
     </InstructionStep>
-
-    <ServerStepImage stepNumber={13} alt="Pot covered with foil and lid for dum cooking" caption="Pot covered with foil and lid for dum cooking" />
 
     <InstructionStep stepNumber={14}>
-      Cook on high heat for 3 minutes, then reduce to lowest heat for 45 minutes
+      Strain the <strong>rice</strong>, pour cold <strong>water</strong> on top to completely stop the cooking process. Set aside for later.
+    </InstructionStep>
+  </InstructionsSection>
+  <InstructionsSection title="Masala">
+    <InstructionStep stepNumber={15}>
+      Heat a big kadhai, add oil and <strong>ghee</strong>. Now add the onions and fry until golden. Keep 1/4 <strong>onion</strong> aside for later.
     </InstructionStep>
 
-    <ServerStepImage stepNumber={14} alt="Biryani pot on low heat for dum cooking" caption="Biryani pot on low heat for dum cooking" />
+    <ServerStepImage stepNumber="15-1" alt="Frying Onion 1" caption="Frying Onion 1" />
+
+    <ServerStepImage stepNumber="15-2" alt="Frying Onion 2" caption="Frying Onion 2" />
+
+    <InstructionStep stepNumber={16}>
+      Add <strong>chicken</strong> and <strong>potato</strong>. Mix them well and cook for 15 mins or until almost cooked. Keep the lid closed and add <strong>water</strong> if needed to prevent the spices from burning or <strong>chicken</strong> from sticking to the kadhai. Once cooked, keep half cup of gravy aside for later.
+    </InstructionStep>
+
+    <ServerStepImage stepNumber="16-1" alt="Add Chicken and Potato 1" caption="Add Chicken and Potato 1" />
+
+    <ServerStepImage stepNumber="16-2" alt="Add Chicken and Potato 2" caption="Add Chicken and Potato 2" />
+
+    <InstructionStep stepNumber={17}>
+      Add peeled eggs and mix well. Turn down the heat at this stage.
+    </InstructionStep>
+
+    <ServerStepImage stepNumber="17" alt="Add Peeled Eggs" caption="Add Peeled Eggs" />
+  </InstructionsSection>
+  <InstructionsSection title="Layering">
+    <InstructionStep stepNumber={18}>
+      In the kadhai, layer the cooked <strong>rice</strong>. We can add half of <strong>rice</strong> in first layer and then half in the second layer.
+    </InstructionStep>
+
+    <ServerStepImage stepNumber="18" alt="Layer the Rice" caption="Layer the Rice" />
+
+    <InstructionStep stepNumber={19}>
+      In each layer, add <strong>mint</strong> <strong>leaves</strong>, <strong>curry</strong> and <strong>onion</strong> we set aside.
+    </InstructionStep>
+
+    <ServerStepImage stepNumber="19" alt="Add Curry, Mint Leaves" caption="Add Curry, Mint Leaves" />
+
+    <InstructionStep stepNumber={20}>
+      On top of last layer, add the <strong>saffron</strong> <strong>milk</strong>.
+    </InstructionStep>
+
+    <InstructionStep stepNumber={21}>
+      Now close the lid. Either seal it by using dough around the rim or add a heavy weight on top. Cook on high flame for a few minutes to bring the <strong>curry</strong> to boil.
+    </InstructionStep>
+
+    <ServerStepImage stepNumber="21" alt="Dum Cook" caption="Dum Cook" />
+
+    <InstructionStep stepNumber={22}>
+      Turn down the heat to lowest and cook for 15 to 20 minutes.
+    </InstructionStep>
+
+    <InstructionStep stepNumber={23}>
+      Turn off the flame and let it cool down for additional 15 to 20 minutes.
+    </InstructionStep>
+
+    <InstructionStep stepNumber={24}>
+      Open the lid and using a spatula, gently mix the <strong>curry</strong> into <strong>rice</strong>. Do not mix thoroughly - you want to see distinct layers of <strong>white</strong> and colored <strong>rice</strong>.
+    </InstructionStep>
+
+    <ServerStepImage stepNumber="24" alt="Mix and Remove Excess Heat" caption="Mix and Remove Excess Heat" />
+
+    <InstructionStep stepNumber={25}>
+      Serve hot in a plate and enjoy.
+    </InstructionStep>
+
+    <ServerStepImage stepNumber="25" alt="Serve Hot and Enjoy" caption="Serve Hot and Enjoy" />
   </InstructionsSection>
 </InstructionsContainer>
 
@@ -162,11 +231,12 @@ tags:
 
 <RecipeNotes>
   <>Use aged basmati rice for best results</>
-  <>Don't overcook the rice - it should be 70% done before layering</>
-  <>Dum cooking is crucial - keep heat very low to avoid burning</>
-  <>Let the biryani rest for 10 minutes before opening the lid</>
-  <>Serve hot with raita and boiled eggs on the side</>
-  <>Can be stored in refrigerator for up to 3 days</>
+  <>Don't overcook the rice - it should be 70% to 80% cooked before layering</>
+  <>Dum cooking is crucial - keep heat very low to avoid burning. Use a heavy weight or dough on the rim to keep it sealed</>
+  <>Let the biryani rest for 15 to 20 minutes before opening the lid</>
+  <>Serve hot with raita and/or salan on the side</>
+  <>Can be stored in refrigerator for up to 3 days in an airtight container</>
+  <>If you don't have a heavy weight, place the kadhai on a tawa/griddle to prevent bottom burning during dum cooking</>
 </RecipeNotes>
 
 ### Additional Tags
