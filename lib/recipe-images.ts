@@ -83,7 +83,10 @@ export function getRecipeImages(recipeSlug: string, type: 'overview' | 'steps'):
       })
       .map((file: string) => `/images/recipes/${recipeSlug}/${type}/${file}`);
     
-    return imageFiles;
+    // Deduplicate images to avoid showing both JPEG and WebP versions
+    const deduplicatedImages = deduplicateImages(imageFiles);
+    
+    return deduplicatedImages;
   } catch (error) {
     console.warn(`Failed to read recipe images for ${recipeSlug}/${type}:`, error);
     return [];
@@ -196,4 +199,39 @@ export function getOptimizedImageSrc(recipeSlug: string, type: 'overview' | 'ste
     fallback,
     sources
   };
+}
+
+/**
+ * Deduplicate images by removing multiple formats of the same image
+ * Prioritizes WebP when available, falls back to JPEG/PNG
+ */
+function deduplicateImages(images: string[]): string[] {
+  const imageMap = new Map<string, string>();
+  
+  images.forEach(image => {
+    // Extract filename from full path
+    const filename = image.split('/').pop() || '';
+    const baseName = filename.replace(/\.(jpg|jpeg|png|webp|avif)$/i, '');
+    const extension = filename.match(/\.(jpg|jpeg|png|webp|avif)$/i)?.[1].toLowerCase();
+    
+    const existing = imageMap.get(baseName);
+    if (!existing) {
+      // First occurrence of this base name
+      imageMap.set(baseName, image);
+    } else {
+      // Check if we should replace existing with better format
+      const existingExt = existing.split('.').pop()?.toLowerCase();
+      
+      // Priority: WebP > AVIF > JPEG/JPG > PNG
+      const formatPriority = { webp: 4, avif: 3, jpg: 2, jpeg: 2, png: 1 };
+      const currentPriority = formatPriority[extension as keyof typeof formatPriority] || 0;
+      const existingPriority = formatPriority[existingExt as keyof typeof formatPriority] || 0;
+      
+      if (currentPriority > existingPriority) {
+        imageMap.set(baseName, image);
+      }
+    }
+  });
+  
+  return Array.from(imageMap.values());
 }
