@@ -1,6 +1,6 @@
 "use client";
 
-import Image from 'next/image';
+import { OptimizedImage } from './OptimizedImage';
 import Link from 'next/link';
 import React, { useState } from 'react';
 import 'keen-slider/keen-slider.min.css';
@@ -280,11 +280,12 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
           }}
           className="recipe-of-day-flex"
         >
-          <Image
+          <OptimizedImage
             src={recipeOfTheDay.previewImage || '/logo.png'}
             alt={recipeOfTheDay.title}
             width={56}
             height={56}
+            priority // Recipe of the day should load first
             style={{
               objectFit: (recipeOfTheDay.previewImage || '/logo.png') !== '/logo.png' ? 'cover' : 'contain',
               borderRadius: '0.75rem',
@@ -358,7 +359,7 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
                   onMouseEnter={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.boxShadow = '0 4px 18px rgba(0, 0, 0, 0.15)')}
                   onMouseLeave={(e: React.MouseEvent<HTMLAnchorElement>) => (e.currentTarget.style.boxShadow = '0 2px 12px rgba(0, 0, 0, 0.1)')}
                 >
-                  <Image 
+                  <OptimizedImage 
                     src={page.previewImage || '/logo.png'} 
                     alt={page.title} 
                     width={320} 
@@ -368,8 +369,9 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
                       width: '100%', 
                       height: 200, 
                       flexShrink: 0,
-                      backgroundColor: (page.previewImage || '/logo.png') !== '/logo.png' ? 'transparent' : 'var(--card-bg)'
+                      background: (page.previewImage || '/logo.png') !== '/logo.png' ? 'transparent' : 'var(--card-bg)'
                     }} 
+                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 320px"
                   />
                   <div style={{ padding: '1.25rem', minHeight: 120, boxSizing: 'border-box', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
                     <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600 }}>{page.title}</h3>
@@ -431,7 +433,7 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
                 margin: '0 auto',
               }}
             >
-              <Image 
+              <OptimizedImage 
                 src={page.previewImage || '/logo.png'} 
                 alt={page.title} 
                 width={320} 
@@ -441,8 +443,9 @@ export default function OverviewDynamic({ recipes }: { recipes: Recipe[] }) {
                   width: '100%', 
                   height: 200, 
                   flexShrink: 0,
-                  backgroundColor: (page.previewImage || '/logo.png') !== '/logo.png' ? 'transparent' : 'var(--card-bg)'
+                  background: (page.previewImage || '/logo.png') !== '/logo.png' ? 'transparent' : 'var(--card-bg)'
                 }} 
+                sizes="(max-width: 768px) 100vw, 320px"
               />
               <div style={{ padding: '1.25rem', minHeight: 120, boxSizing: 'border-box', flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'flex-start' }}>
                 <h3 style={{ margin: 0, fontSize: '1.25rem', fontWeight: 600 }}>{page.title}</h3>

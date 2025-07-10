@@ -142,3 +142,58 @@ export function createRecipeImageDirectories(recipeSlug: string): void {
     console.error(`Failed to create directories for recipe ${recipeSlug}:`, error);
   }
 }
+
+/**
+ * Get the best available image source with WebP support and fallbacks
+ */
+export function getOptimizedImageSrc(recipeSlug: string, type: 'overview' | 'steps', filename: string): {
+  webp?: string;
+  fallback: string;
+  sources: Array<{ srcSet: string; type: string; }>;
+} {
+  const basePath = `/images/recipes/${recipeSlug}/${type}`;
+  const nameWithoutExt = path.basename(filename, path.extname(filename));
+  
+  // Check what formats are available
+  const webpPath = `${basePath}/${nameWithoutExt}.webp`;
+  const jpegPath = `${basePath}/${nameWithoutExt}.jpg`;
+  const pngPath = `${basePath}/${nameWithoutExt}.png`;
+  
+  const publicDir = getPublicPath();
+  const webpExists = fs.existsSync(path.join(publicDir, webpPath));
+  const jpegExists = fs.existsSync(path.join(publicDir, jpegPath));
+  const pngExists = fs.existsSync(path.join(publicDir, pngPath));
+  
+  // Build sources array for picture element (most optimal first)
+  const sources: Array<{ srcSet: string; type: string; }> = [];
+  
+  if (webpExists) {
+    sources.push({ srcSet: webpPath, type: 'image/webp' });
+  }
+  
+  // Determine the best fallback format
+  let fallback: string;
+  if (jpegExists) {
+    fallback = jpegPath;
+    if (!webpExists) {
+      sources.push({ srcSet: jpegPath, type: 'image/jpeg' });
+    }
+  } else if (pngExists) {
+    fallback = pngPath;
+    if (!webpExists) {
+      sources.push({ srcSet: pngPath, type: 'image/png' });
+    }
+  } else {
+    // Fallback to original filename if optimized versions don't exist
+    fallback = `${basePath}/${filename}`;
+    const ext = path.extname(filename).toLowerCase();
+    const mimeType = ext === '.png' ? 'image/png' : 'image/jpeg';
+    sources.push({ srcSet: fallback, type: mimeType });
+  }
+  
+  return {
+    webp: webpExists ? webpPath : undefined,
+    fallback,
+    sources
+  };
+}

@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import Image from "next/image";
+import { OptimizedImage } from './OptimizedImage';
 import 'keen-slider/keen-slider.min.css';
 import { useKeenSlider } from 'keen-slider/react';
 
@@ -175,20 +175,18 @@ export function KeenSliderImageCarousel({ images, alt }: { images: string[]; alt
             }}
           >
             {images.map((image, idx) => (
-              <div key={idx} className="keen-slider__slide carousel-slide" style={{ height: 320 }}>
-                <Image
+              <div key={idx} className="keen-slider__slide carousel-slide" style={{ height: 320, position: 'relative', overflow: 'hidden' }}>
+                <OptimizedImage
                   src={image}
                   alt={`${alt} - Image ${idx + 1}`}
                   width={480}
                   height={320}
+                  priority={idx === 0} // Priority load for first image only
+                  fill
                   style={{
-                    display: "block",
-                    borderRadius: "0.7em",
-                    background: "transparent",
-                    objectFit: 'cover',
-                    width: '100%',
-                    height: '100%'
+                    objectFit: 'cover'
                   }}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 480px"
                 />
               </div>
             ))}
@@ -238,20 +236,18 @@ export function KeenSliderImageCarousel({ images, alt }: { images: string[]; alt
           }}
         >
           {images.map((image, idx) => (
-            <div key={idx} className="keen-slider__slide carousel-slide" style={{ height: 320 }}>
-              <Image
+            <div key={idx} className="keen-slider__slide carousel-slide" style={{ height: 320, position: 'relative', overflow: 'hidden' }}>
+              <OptimizedImage
                 src={image}
                 alt={`${alt} - Image ${idx + 1}`}
                 width={480}
                 height={320}
+                priority={idx === 0} // Priority load for first image only
+                fill
                 style={{
-                  display: "block",
-                  borderRadius: "0.7em",
-                  background: "transparent",
-                  objectFit: 'cover',
-                  width: '100%',
-                  height: '100%'
+                  objectFit: 'cover'
                 }}
+                sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 480px"
               />
             </div>
           ))}

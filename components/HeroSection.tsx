@@ -1,6 +1,6 @@
 "use client";
 import * as React from "react";
-import Image from "next/image";
+import { OptimizedImage } from './OptimizedImage';
 
 export default function HeroSection() {
   const [marginTop, setMarginTop] = React.useState("0.8rem");
@@ -35,7 +35,7 @@ export default function HeroSection() {
         marginRight: 0,
       }}
     >
-      <Image
+      <OptimizedImage
         src="/logo.png"
         alt="Recipe Book Logo"
         width={56}

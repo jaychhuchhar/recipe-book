@@ -1,0 +1,310 @@
+{
+  "recipes": {
+    "chocolate-chip-cookies": {
+      "overview": [
+        {
+          "filename": "1.jpg",
+          "path": "/images/recipes/chocolate-chip-cookies/overview/1.jpg",
+          "size": 189624,
+          "priority": "normal"
+        },
+        {
+          "filename": "1.webp",
+          "path": "/images/recipes/chocolate-chip-cookies/overview/1.webp",
+          "size": 110748,
+          "priority": "normal"
+        },
+        {
+          "filename": "2.jpg",
+          "path": "/images/recipes/chocolate-chip-cookies/overview/2.jpg",
+          "size": 236026,
+          "priority": "normal"
+        },
+        {
+          "filename": "2.webp",
+          "path": "/images/recipes/chocolate-chip-cookies/overview/2.webp",
+          "size": 142740,
+          "priority": "normal"
+        },
+        {
+          "filename": "3.jpg",
+          "path": "/images/recipes/chocolate-chip-cookies/overview/3.jpg",
+          "size": 322777,
+          "priority": "normal"
+        },
+        {
+          "filename": "3.webp",
+          "path": "/images/recipes/chocolate-chip-cookies/overview/3.webp",
+          "size": 254482,
+          "priority": "normal"
+        },
+        {
+          "filename": "main.jpg",
+          "path": "/images/recipes/chocolate-chip-cookies/overview/main.jpg",
+          "size": 304579,
+          "priority": "high"
+        },
+        {
+          "filename": "main.webp",
+          "path": "/images/recipes/chocolate-chip-cookies/overview/main.webp",
+          "size": 215156,
+          "priority": "high"
+        }
+      ],
+      "steps": []
+    },
+    "kolkata-style-biriyani": {
+      "overview": [
+        {
+          "filename": "1.jpg",
+          "path": "/images/recipes/kolkata-style-biriyani/overview/1.jpg",
+          "size": 254327,
+          "priority": "normal"
+        },
+        {
+          "filename": "1.webp",
+          "path": "/images/recipes/kolkata-style-biriyani/overview/1.webp",
+          "size": 165488,
+          "priority": "normal"
+        },
+        {
+          "filename": "main.jpg",
+          "path": "/images/recipes/kolkata-style-biriyani/overview/main.jpg",
+          "size": 215253,
+          "priority": "high"
+        },
+        {
+          "filename": "main.webp",
+          "path": "/images/recipes/kolkata-style-biriyani/overview/main.webp",
+          "size": 137634,
+          "priority": "high"
+        }
+      ],
+      "steps": [
+        {
+          "filename": "01.jpg",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/01.jpg",
+          "size": 311866,
+          "priority": "low"
+        },
+        {
+          "filename": "01.webp",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/01.webp",
+          "size": 252088,
+          "priority": "low"
+        },
+        {
+          "filename": "02.jpg",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/02.jpg",
+          "size": 216607,
+          "priority": "low"
+        },
+        {
+          "filename": "02.webp",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/02.webp",
+          "size": 139248,
+          "priority": "low"
+        },
+        {
+          "filename": "09.jpg",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/09.jpg",
+          "size": 246549,
+          "priority": "low"
+        },
+        {
+          "filename": "09.webp",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/09.webp",
+          "size": 184792,
+          "priority": "low"
+        },
+        {
+          "filename": "10.jpg",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/10.jpg",
+          "size": 96665,
+          "priority": "low"
+        },
+        {
+          "filename": "10.webp",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/10.webp",
+          "size": 47260,
+          "priority": "low"
+        },
+        {
+          "filename": "15-1.jpg",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/15-1.jpg",
+          "size": 200489,
+          "priority": "low"
+        },
+        {
+          "filename": "15-1.webp",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/15-1.webp",
+          "size": 131130,
+          "priority": "low"
+        },
+        {
+          "filename": "15-2.jpg",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/15-2.jpg",
+          "size": 212054,
+          "priority": "low"
+        },
+        {
+          "filename": "15-2.webp",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/15-2.webp",
+          "size": 139940,
+          "priority": "low"
+        },
+        {
+          "filename": "16-1.jpg",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/16-1.jpg",
+          "size": 294515,
+          "priority": "low"
+        },
+        {
+          "filename": "16-1.webp",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/16-1.webp",
+          "size": 216346,
+          "priority": "low"
+        },
+        {
+          "filename": "16-2.jpg",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/16-2.jpg",
+          "size": 248020,
+          "priority": "low"
+        },
+        {
+          "filename": "16-2.webp",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/16-2.webp",
+          "size": 169532,
+          "priority": "low"
+        },
+        {
+          "filename": "17.jpg",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/17.jpg",
+          "size": 263966,
+          "priority": "low"
+        },
+        {
+          "filename": "17.webp",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/17.webp",
+          "size": 181976,
+          "priority": "low"
+        },
+        {
+          "filename": "18.jpg",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/18.jpg",
+          "size": 197154,
+          "priority": "low"
+        },
+        {
+          "filename": "18.webp",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/18.webp",
+          "size": 118514,
+          "priority": "low"
+        },
+        {
+          "filename": "19.jpg",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/19.jpg",
+          "size": 275648,
+          "priority": "low"
+        },
+        {
+          "filename": "19.webp",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/19.webp",
+          "size": 190582,
+          "priority": "low"
+        },
+        {
+          "filename": "21.jpg",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/21.jpg",
+          "size": 234037,
+          "priority": "low"
+        },
+        {
+          "filename": "21.webp",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/21.webp",
+          "size": 158320,
+          "priority": "low"
+        },
+        {
+          "filename": "24.jpg",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/24.jpg",
+          "size": 254327,
+          "priority": "low"
+        },
+        {
+          "filename": "24.webp",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/24.webp",
+          "size": 165488,
+          "priority": "low"
+        },
+        {
+          "filename": "25.jpg",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/25.jpg",
+          "size": 215253,
+          "priority": "low"
+        },
+        {
+          "filename": "25.webp",
+          "path": "/images/recipes/kolkata-style-biriyani/steps/25.webp",
+          "size": 137634,
+          "priority": "low"
+        }
+      ]
+    },
+    "whole-wheat-bread": {
+      "overview": [
+        {
+          "filename": "1.jpg",
+          "path": "/images/recipes/whole-wheat-bread/overview/1.jpg",
+          "size": 264717,
+          "priority": "normal"
+        },
+        {
+          "filename": "1.webp",
+          "path": "/images/recipes/whole-wheat-bread/overview/1.webp",
+          "size": 173000,
+          "priority": "normal"
+        },
+        {
+          "filename": "2.jpg",
+          "path": "/images/recipes/whole-wheat-bread/overview/2.jpg",
+          "size": 290050,
+          "priority": "normal"
+        },
+        {
+          "filename": "2.webp",
+          "path": "/images/recipes/whole-wheat-bread/overview/2.webp",
+          "size": 207404,
+          "priority": "normal"
+        },
+        {
+          "filename": "3.jpg",
+          "path": "/images/recipes/whole-wheat-bread/overview/3.jpg",
+          "size": 322213,
+          "priority": "normal"
+        },
+        {
+          "filename": "3.webp",
+          "path": "/images/recipes/whole-wheat-bread/overview/3.webp",
+          "size": 232568,
+          "priority": "normal"
+        },
+        {
+          "filename": "main.jpg",
+          "path": "/images/recipes/whole-wheat-bread/overview/main.jpg",
+          "size": 340641,
+          "priority": "high"
+        },
+        {
+          "filename": "main.webp",
+          "path": "/images/recipes/whole-wheat-bread/overview/main.webp",
+          "size": 243954,
+          "priority": "high"
+        }
+      ],
+      "steps": []
+    }
+  },
+  "totalImages": 48,
+  "generatedAt": "2025-07-10T10:52:41.378Z"
+}

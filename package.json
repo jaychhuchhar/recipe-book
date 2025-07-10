@@ -3,11 +3,16 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "npm run setup-images && npm run convert && next build",
-    "dev": "npm run setup-images && npm run convert && next dev --turbo",
+    "build": "npm run setup-images && npm run optimize-images && npm run convert-images && npm run convert && next build",
+    "dev": "npm run setup-images && npm run optimize-images && npm run convert-images && npm run convert && next dev --turbo",
     "start": "next start",
     "postinstall": "fumadocs-mdx",
     "setup-images": "node scripts/setup-recipe-images.js",
+    "optimize-images": "node scripts/optimize-images.js",
+    "convert-images": "node scripts/convert-images.js --all",
+    "convert-images-webp": "node scripts/convert-images.js --all --webp",
+    "analyze-images": "node scripts/convert-images.js --analyze",
+    "test-webp": "node scripts/test-webp.js",
     "clean": "bash scripts/clean.sh",
     "convert-recipe": "node scripts/recipe-converter.js",
     "convert": "node scripts/recipe-converter.js --all"
@@ -34,6 +39,7 @@
     "fast-glob": "^3.3.3",
     "gray-matter": "^4.0.3",
     "postcss": "^8.5.6",
+    "sharp": "^0.34.2",
     "tailwindcss": "^4.1.10",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"

@@ -1,6 +1,6 @@
 import React from 'react';
 import { RecipeStepImage } from './RecipeStepImage';
-import { getRecipeImages } from '@/lib/recipe-images';
+import { getRecipeImages, getOptimizedImageSrc } from '@/lib/recipe-images';
 
 interface ServerStepImageProps {
   stepNumber: number | string; // Support both 1 and "1.1", "1.2" etc
@@ -41,15 +41,26 @@ export function ServerStepImage({
     );
   });
 
-  const imageSrc = stepImage || fallbackSrc;
-
-  if (!imageSrc) {
+  if (!stepImage && !fallbackSrc) {
     return null; // No image available
+  }
+
+  // Get optimized image sources (WebP + fallback)
+  let imageSources;
+  if (stepImage) {
+    const filename = stepImage.split('/').pop() || '';
+    imageSources = getOptimizedImageSrc(recipeSlug, 'steps', filename);
+  }
+
+  const finalSrc = stepImage || fallbackSrc;
+  if (!finalSrc) {
+    return null;
   }
 
   return (
     <RecipeStepImage
-      src={imageSrc}
+      src={imageSources?.fallback || finalSrc}
+      webpSrc={imageSources?.webp}
       alt={alt || `Step ${stepNumber}`}
       caption={caption}
       size={size}

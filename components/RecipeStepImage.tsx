@@ -1,16 +1,17 @@
 "use client";
 
 import React from 'react';
-import Image from 'next/image';
+import { OptimizedImage } from './OptimizedImage';
 
 interface RecipeStepImageProps {
   src: string;
   alt: string;
   caption?: string;
   size?: 'small' | 'medium' | 'large';
+  webpSrc?: string;
 }
 
-export function RecipeStepImage({ src, alt, caption, size = 'medium' }: RecipeStepImageProps) {
+export function RecipeStepImage({ src, alt, caption, size = 'medium', webpSrc }: RecipeStepImageProps) {
   const sizeStyles = {
     small: { maxWidth: '300px', width: '100%' },
     medium: { maxWidth: '450px', width: '100%' },
@@ -33,14 +34,17 @@ export function RecipeStepImage({ src, alt, caption, size = 'medium' }: RecipeSt
         overflow: 'hidden',
         boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
       }}>
-        <Image
+        <OptimizedImage
           src={src}
+          webpSrc={webpSrc}
           alt={alt}
+          width={600}
+          height={450}
           fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           style={{
             objectFit: 'cover'
           }}
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
       </div>
       {caption && (
