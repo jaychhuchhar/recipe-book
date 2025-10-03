@@ -2,6 +2,20 @@
 @import 'fumadocs-ui/css/neutral.css';
 @import 'fumadocs-ui/css/preset.css';
 
+/* Global accent color definitions - ensure availability everywhere */
+:root {
+  --accent-light: #333;
+  --accent-dark: #e0e0e0;
+}
+
+html:not(.dark) {
+  --accent: var(--accent-light);
+}
+
+html.dark {
+  --accent: var(--accent-dark);
+}
+
 /* Targeted fix for ingredient category bullets without breaking other content */
 .recipe-ingredients-container .ingredient-category-box {
   display: block !important;

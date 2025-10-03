@@ -10,18 +10,19 @@ Calories: [Approximate calories per serving]
 Dietary: [Vegetarian/Vegan/Gluten-Free/Dairy-Free/None]
 Allergens: [Common allergens or None]
 Cost: [Rs. X]
+Rating: [1.0-5.0 or leave empty for default 4.5]
 YouTube: [YouTube video ID or full URL - optional]
 
 ## Ingredients
 - [Quantity] [ingredient name]
-- [Quantity] [ingredient name] 
+- [Quantity] [ingredient name]
 - [Quantity] [ingredient name]
 - [Add more ingredients as needed]
 
 ## Ingredients (Alternative: Categorized for Complex Recipes)
 ### [Category Name - e.g., "Main Ingredients"]
 - [Quantity] [ingredient name]
-- [Quantity] [ingredient name] 
+- [Quantity] [ingredient name]
 
 ### [Category Name - e.g., "Spices & Seasonings"]
 - [Quantity] [ingredient name]
@@ -36,7 +37,7 @@ YouTube: [YouTube video ID or full URL - optional]
 1. [First step instruction]
    Alt: [Image description for step 1]
 2. [Second step instruction]
-   Alt: [Image description for step 2]  
+   Alt: [Image description for step 2]
 3. [Third step instruction]
 
 ### [Another Section - e.g., "Cook the Dish"]

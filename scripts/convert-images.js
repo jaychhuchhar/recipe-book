@@ -7,7 +7,7 @@ const { glob } = require('glob');
 
 /**
  * Image Conversion and Optimization Utility
- * 
+ *
  * This script compresses and optimizes images in the recipe book using sharp.
  * Supports conversion to WebP format and various compression levels.
  */
@@ -41,13 +41,13 @@ class ImageConverter {
           path.join(process.cwd(), 'public', 'images', 'recipes')
         );
       }
-      
+
       const ext = path.extname(inputPath).toLowerCase();
-      
+
       // Ensure output directory exists
       const outputDir = path.dirname(outputFilePath);
       await fs.mkdir(outputDir, { recursive: true });
-      
+
       // Get original file stats
       const originalStats = await fs.stat(inputPath);
       const originalSize = originalStats.size;
@@ -60,17 +60,17 @@ class ImageConverter {
 
       // Create sharp instance
       let image = sharp(inputPath);
-      
+
       // Get image metadata
       const metadata = await image.metadata();
-      
+
       // Resize if too large
       if (metadata.width > this.maxWidth || metadata.height > this.maxHeight) {
         image = image.resize(this.maxWidth, this.maxHeight, {
           fit: 'inside',
           withoutEnlargement: true
         });
-        
+
         if (this.verbose) {
           console.log(`  Resizing from ${metadata.width}x${metadata.height} to max ${this.maxWidth}x${this.maxHeight}`);
         }
@@ -78,19 +78,19 @@ class ImageConverter {
 
       // Apply format-specific optimization
       if (ext === '.jpg' || ext === '.jpeg') {
-        image = image.jpeg({ 
+        image = image.jpeg({
           quality: this.jpegQuality,
           progressive: true,
           mozjpeg: true
         });
       } else if (ext === '.png') {
-        image = image.png({ 
+        image = image.png({
           quality: this.pngQuality,
           compressionLevel: 9,
           palette: true
         });
       } else if (ext === '.webp') {
-        image = image.webp({ 
+        image = image.webp({
           quality: this.webpQuality,
           effort: 6
         });
@@ -99,15 +99,15 @@ class ImageConverter {
       if (!this.dryRun) {
         // Write optimized image
         await image.toFile(outputFilePath + '.tmp');
-        
+
         // Check if optimization actually reduced file size
         const optimizedStats = await fs.stat(outputFilePath + '.tmp');
         const optimizedSize = optimizedStats.size;
-        
+
         if (optimizedSize < originalSize) {
           // Replace original with optimized version
           await fs.rename(outputFilePath + '.tmp', outputFilePath);
-          
+
           const savings = ((originalSize - optimizedSize) / originalSize * 100).toFixed(1);
           console.log(`✓ Optimized: ${path.basename(inputPath)} (${savings}% smaller, ${(optimizedSize / 1024).toFixed(2)} KB)`);
         } else {
@@ -121,18 +121,18 @@ class ImageConverter {
           const webpPath = outputFilePath.replace(/\.(jpe?g|png)$/i, '.webp');
           const webpDir = path.dirname(webpPath);
           await fs.mkdir(webpDir, { recursive: true });
-          
+
           await sharp(inputPath)
             .resize(this.maxWidth, this.maxHeight, {
               fit: 'inside',
               withoutEnlargement: true
             })
-            .webp({ 
+            .webp({
               quality: this.webpQuality,
               effort: 6
             })
             .toFile(webpPath);
-          
+
           const webpStats = await fs.stat(webpPath);
           console.log(`✓ WebP created: ${path.basename(webpPath)} (${(webpStats.size / 1024).toFixed(2)} KB)`);
         }
@@ -145,10 +145,103 @@ class ImageConverter {
     }
   }
 
+  /**
+   * Clean up orphaned files in public directory that no longer exist in source
+   */
+  async cleanupOrphanedFiles(recipeName = null) {
+    const publicDir = path.join(process.cwd(), 'public', 'images', 'recipes');
+    const sourceDir = path.join(process.cwd(), 'recipes', 'images');
+
+    const recipesToClean = recipeName ? [recipeName] : [];
+
+    if (!recipeName) {
+      // Get all recipe directories from public folder
+      try {
+        const entries = await fs.readdir(publicDir, { withFileTypes: true });
+        recipesToClean.push(...entries
+          .filter(entry => entry.isDirectory())
+          .map(entry => entry.name));
+      } catch {
+        console.log('No public recipe directories found to clean');
+        return;
+      }
+    }
+
+    let cleanedCount = 0;
+
+    for (const recipe of recipesToClean) {
+      const recipePublicDir = path.join(publicDir, recipe);
+      const recipeSourceDir = path.join(sourceDir, recipe);
+
+      try {
+        // Check if source directory exists
+        const sourceExists = await fs.access(recipeSourceDir).then(() => true).catch(() => false);
+
+        if (!sourceExists) {
+          // Remove entire public recipe directory if source doesn't exist
+          await fs.rm(recipePublicDir, { recursive: true, force: true });
+          console.log(`🗑️  Removed orphaned recipe directory: public/images/recipes/${recipe}`);
+          cleanedCount++;
+          continue;
+        }
+
+        // Clean up individual files within the recipe directory
+        const publicImagePattern = path.join(recipePublicDir, '**', '*.{jpg,jpeg,png,webp,avif}');
+        const publicImages = await glob(publicImagePattern, { nodir: true });
+
+        for (const publicImagePath of publicImages) {
+          // Get relative path within the recipe directory
+          const relativePath = path.relative(recipePublicDir, publicImagePath);
+          const publicExt = path.extname(publicImagePath).toLowerCase();
+
+          let sourceFileExists = false;
+
+          if (publicExt === '.webp') {
+            // For WebP files, check if corresponding source file exists (jpg, jpeg, or png)
+            const baseName = relativePath.replace(/\.webp$/i, '');
+            const possibleSources = [
+              path.join(recipeSourceDir, baseName + '.jpg'),
+              path.join(recipeSourceDir, baseName + '.jpeg'),
+              path.join(recipeSourceDir, baseName + '.png')
+            ];
+
+            // Check if any of the possible source files exist
+            for (const sourcePath of possibleSources) {
+              const exists = await fs.access(sourcePath).then(() => true).catch(() => false);
+              if (exists) {
+                sourceFileExists = true;
+                break;
+              }
+            }
+          } else {
+            // For non-WebP files, check for exact match
+            const sourceImagePath = path.join(recipeSourceDir, relativePath);
+            sourceFileExists = await fs.access(sourceImagePath).then(() => true).catch(() => false);
+          }
+
+          if (!sourceFileExists) {
+            await fs.unlink(publicImagePath);
+            console.log(`🗑️  Removed orphaned file: public/images/recipes/${recipe}/${relativePath}`);
+            cleanedCount++;
+          }
+        }
+
+      } catch (error) {
+        console.warn(`Warning: Error cleaning ${recipe}:`, error.message);
+      }
+    }
+
+    if (cleanedCount > 0) {
+      console.log(`\n🧹 Cleanup complete: Removed ${cleanedCount} orphaned file(s)`);
+    } else {
+      console.log('\n✨ No orphaned files found');
+    }
+  }
+
   async convertRecipe(recipeName) {
     const sourceDir = path.join(process.cwd(), 'recipes', 'images', recipeName);
     const outputDir = path.join(process.cwd(), 'public', 'images', 'recipes', recipeName);
-    
+
     try {
       await fs.access(sourceDir);
     } catch {
@@ -159,18 +252,18 @@ class ImageConverter {
     console.log(`\n🔄 Converting images for recipe: ${recipeName}`);
     console.log(`  Source: recipes/images/${recipeName}`);
     console.log(`  Output: public/images/recipes/${recipeName}`);
-    
+
     // Find all image files in the source recipe directory
     const imagePattern = path.join(sourceDir, '**', '*.{jpg,jpeg,png,webp}');
     const imageFiles = await glob(imagePattern, { nodir: true });
-    
+
     if (imageFiles.length === 0) {
       console.log(`No images found in ${sourceDir}`);
       return;
     }
 
     console.log(`Found ${imageFiles.length} images to process`);
-    
+
     for (const imagePath of imageFiles) {
       await this.convertImage(imagePath);
     }
@@ -178,7 +271,7 @@ class ImageConverter {
 
   async convertAllRecipes() {
     const sourceDir = path.join(process.cwd(), 'recipes', 'images');
-    
+
     try {
       await fs.access(sourceDir);
     } catch {
@@ -189,7 +282,7 @@ class ImageConverter {
     console.log('🔄 Converting images for all recipes...');
     console.log('  Source: recipes/images/');
     console.log('  Output: public/images/recipes/');
-    
+
     // Get all recipe directories
     const entries = await fs.readdir(sourceDir, { withFileTypes: true });
     const recipeNames = entries
@@ -202,7 +295,7 @@ class ImageConverter {
     }
 
     console.log(`Found ${recipeNames.length} recipes to process`);
-    
+
     for (const recipeName of recipeNames) {
       await this.convertRecipe(recipeName);
     }
@@ -210,7 +303,7 @@ class ImageConverter {
 
   async analyzeImages() {
     const sourceDir = path.join(process.cwd(), 'recipes', 'images');
-    
+
     try {
       await fs.access(sourceDir);
     } catch {
@@ -219,10 +312,10 @@ class ImageConverter {
     }
 
     console.log('📊 Analyzing source recipe images...');
-    
+
     const imagePattern = path.join(sourceDir, '**', '*.{jpg,jpeg,png,webp}');
     const imageFiles = await glob(imagePattern, { nodir: true });
-    
+
     if (imageFiles.length === 0) {
       console.log('No images found');
       return;
@@ -230,14 +323,14 @@ class ImageConverter {
 
     let totalSize = 0;
     let largeImages = [];
-    
+
     for (const imagePath of imageFiles) {
       try {
         const stats = await fs.stat(imagePath);
         const metadata = await sharp(imagePath).metadata();
-        
+
         totalSize += stats.size;
-        
+
         if (stats.size > 500 * 1024) { // Files larger than 500KB
           largeImages.push({
             path: imagePath,
@@ -250,12 +343,12 @@ class ImageConverter {
         console.error(`Error analyzing ${imagePath}:`, error.message);
       }
     }
-    
+
     console.log(`\nAnalysis Results:`);
     console.log(`Total images: ${imageFiles.length}`);
     console.log(`Total size: ${(totalSize / 1024 / 1024).toFixed(2)} MB`);
     console.log(`Average size: ${(totalSize / imageFiles.length / 1024).toFixed(2)} KB`);
-    
+
     if (largeImages.length > 0) {
       console.log(`\nLarge images (>500KB):`);
       largeImages
@@ -279,8 +372,8 @@ Usage:
   node scripts/convert-images.js [options] [command]
 
 Commands:
-  --all                 Convert all recipes from recipes/images/ to public/images/recipes/
-  --recipe <name>       Convert specific recipe
+  --all                 Convert all recipes and clean up deleted images
+  --recipe <name>       Convert specific recipe and clean up its deleted images
   --analyze             Analyze source images without converting
 
 Options:
@@ -310,7 +403,7 @@ Workflow:
 
 async function main() {
   const args = process.argv.slice(2);
-  
+
   if (args.includes('--help') || args.length === 0) {
     showHelp();
     return;
@@ -355,18 +448,22 @@ async function main() {
       await converter.analyzeImages();
     } else if (args.includes('--all')) {
       await converter.convertAllRecipes();
+      // Always clean up orphaned files after conversion
+      await converter.cleanupOrphanedFiles();
     } else {
       const recipeIndex = args.indexOf('--recipe');
       if (recipeIndex !== -1 && args[recipeIndex + 1]) {
         const recipeName = args[recipeIndex + 1];
         await converter.convertRecipe(recipeName);
+        // Always clean up orphaned files for this recipe
+        await converter.cleanupOrphanedFiles(recipeName);
       } else {
         console.error('Please specify --all, --recipe <name>, or --analyze');
         showHelp();
         process.exit(1);
       }
     }
-    
+
     console.log('\n✅ Image conversion completed!');
   } catch (error) {
     console.error('Error during image conversion:', error);

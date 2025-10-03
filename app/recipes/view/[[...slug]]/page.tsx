@@ -16,25 +16,25 @@ export default async function Page(props: {
   if (!page) notFound();
 
   const MDXContent = page.data.body;
-  
+
   // Extract recipe slug from file path - use only the filename, not the category folder
   const recipeSlug = page.slugs?.length > 0 ? page.slugs[page.slugs.length - 1] : page.data.title.toLowerCase().replace(/\s+/g, '-');
-  
+
   // Get local images for this recipe
   const localOverviewImages = getRecipeImages(recipeSlug, 'overview');
-  
+
   return (
     <DocsPage toc={page.data.toc} full={page.data.full}>
       <RecipeTitle>{page.data.title}</RecipeTitle>
-      
+
       {/* Recipe overview images - only show if local images exist */}
-      <RecipeImageManager 
+      <RecipeImageManager
         type="overview"
         localImages={localOverviewImages}
         fallbackImages={[]}
         alt={page.data.title}
       />
-      
+
       <RecipeMeta
         rating={page.data.rating}
         author={page.data.author}

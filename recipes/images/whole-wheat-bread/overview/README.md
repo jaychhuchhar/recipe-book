@@ -1,6 +1,11 @@
-# Overview Images for whole-wheat-bread
+# Source Overview Images for whole-wheat-bread
 
-Place your recipe overview images here. Supported formats: jpg, jpeg, png, webp, avif
+Place your HIGH-QUALITY original recipe overview images here.
+
+This is the SOURCE directory - these images will be processed and optimized automatically.
+The optimized versions will be placed in public/images/recipes/whole-wheat-bread/overview/
+
+Supported formats: jpg, jpeg, png, webp, avif
 
 Naming conventions:
 - main.jpg/png - Primary recipe image
@@ -8,4 +13,4 @@ Naming conventions:
 - hero.jpg/png - Hero image for the recipe
 - final.jpg/png - Final result image
 
-Images will be automatically detected and displayed in the recipe carousel.
+After adding images here, run: npm run convert-images

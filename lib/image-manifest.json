@@ -251,6 +251,47 @@
         }
       ]
     },
+    "pav-bread": {
+      "overview": [
+        {
+          "filename": "01.jpg",
+          "path": "/images/recipes/pav-bread/overview/01.jpg",
+          "size": 117939,
+          "priority": "normal"
+        },
+        {
+          "filename": "01.webp",
+          "path": "/images/recipes/pav-bread/overview/01.webp",
+          "size": 57554,
+          "priority": "normal"
+        },
+        {
+          "filename": "02.jpg",
+          "path": "/images/recipes/pav-bread/overview/02.jpg",
+          "size": 107512,
+          "priority": "normal"
+        },
+        {
+          "filename": "02.webp",
+          "path": "/images/recipes/pav-bread/overview/02.webp",
+          "size": 50720,
+          "priority": "normal"
+        },
+        {
+          "filename": "main.jpg",
+          "path": "/images/recipes/pav-bread/overview/main.jpg",
+          "size": 171743,
+          "priority": "high"
+        },
+        {
+          "filename": "main.webp",
+          "path": "/images/recipes/pav-bread/overview/main.webp",
+          "size": 101656,
+          "priority": "high"
+        }
+      ],
+      "steps": []
+    },
     "whole-wheat-bread": {
       "overview": [
         {
@@ -305,6 +346,6 @@
       "steps": []
     }
   },
-  "totalImages": 48,
-  "generatedAt": "2025-10-03T09:47:24.248Z"
+  "totalImages": 54,
+  "generatedAt": "2025-10-03T12:06:36.085Z"
 }

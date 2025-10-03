@@ -104,6 +104,10 @@ class RecipeConverter {
         this.recipe.frontmatter.cost = this.extractValue(line);
         continue;
       }
+      if (line.toLowerCase().startsWith('rating:')) {
+        this.recipe.frontmatter.rating = this.extractValue(line);
+        continue;
+      }
       if (line.toLowerCase().startsWith('youtube:') || line.toLowerCase().startsWith('video:')) {
         this.recipe.frontmatter.youtube = this.extractValue(line);
         continue;

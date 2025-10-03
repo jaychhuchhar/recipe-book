@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "build": "npm run setup-images && npm run optimize-images && npm run convert-images && npm run convert && NODE_ENV=production next build",
-    "dev": "npm run setup-images && npm run optimize-images && npm run convert-images && npm run convert && next dev --turbo",
+    "build": "npm run setup-images && npm run optimize-images && npm run convert-images-webp && npm run convert && NODE_ENV=production next build",
+    "dev": "npm run setup-images && npm run optimize-images && npm run convert-images-webp && npm run convert && next dev --turbo",
     "start": "next start",
     "postinstall": "fumadocs-mdx",
     "setup-images": "node scripts/setup-recipe-images.js",
