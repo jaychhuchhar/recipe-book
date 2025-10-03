@@ -43,9 +43,23 @@
       "onAutoForward": "notify"
     }
   },
-  "postCreateCommand": "npm install",
+  "postCreateCommand": "sudo npm install -g npm@latest && npm cache clean --force && npm install",
   "containerEnv": {
     "NODE_ENV": "development",
     "NEXT_TELEMETRY_DISABLED": "1"
-  }
+  },
+  // Enable Git and GitHub CLI
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {
+      "ppa": false,
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "latest"
+    }
+  },
+  // Mount node_modules as named volume for better performance
+  "mounts": [
+    "source=recipe-book-node-modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
+  ]
 }

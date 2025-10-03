@@ -3,7 +3,7 @@
 /**
  * Recipe Converter Tool
  * Converts simple text/MDX files into the full recipe format with custom components
- * 
+ *
  * Usage:
  *   node scripts/recipe-converter.js input.txt [output.mdx] [--category breakfast]
  *   npm run convert-recipe input.txt
@@ -16,7 +16,7 @@ const path = require('path');
 const DEFAULT_VALUES = {
   author: "The IT Chef",
   rating: "4.5",
-  difficulty: "Medium", 
+  difficulty: "Medium",
   cuisine: "International",
   dietary: "None",
   allergens: "None",
@@ -48,7 +48,7 @@ class RecipeConverter {
 
     for (let i = 0; i < lines.length; i++) {
       const line = lines[i];
-      
+
       if (!line) continue;
 
       // Parse frontmatter-style metadata
@@ -144,10 +144,10 @@ class RecipeConverter {
       // Parse content based on current section
       switch (currentSection) {
         case 'ingredients':
-          if ((line.startsWith('-') || line.startsWith('*') || line.match(/^\d+\./) || line.match(/^[a-zA-Z]/)) 
+          if ((line.startsWith('-') || line.startsWith('*') || line.match(/^\d+\./) || line.match(/^[a-zA-Z]/))
               && !line.toLowerCase().startsWith('alt:')) {
             const ingredient = this.cleanListItem(line);
-            
+
             if (currentIngredientCategory) {
               // Add to categorized ingredients
               let category = this.recipe.ingredientCategories.find(cat => cat.title === currentIngredientCategory);
@@ -162,23 +162,23 @@ class RecipeConverter {
             }
           }
           break;
-          
+
         case 'instructions':
           // Check for alt text line (starts with "Alt:")
           if (line.toLowerCase().startsWith('alt:') && this.recipe.instructions.length > 0) {
             const lastInstruction = this.recipe.instructions[this.recipe.instructions.length - 1];
             const altText = line.substring(4).trim();
-            
+
             // Initialize altTexts array if it doesn't exist
             if (!lastInstruction.altTexts) {
               lastInstruction.altTexts = [];
             }
-            
+
             // Support for backward compatibility (single altText)
             if (!lastInstruction.altText) {
               lastInstruction.altText = altText;
             }
-            
+
             // Add to array for multiple images
             lastInstruction.altTexts.push(altText);
           }
@@ -190,13 +190,13 @@ class RecipeConverter {
             });
           }
           break;
-          
+
         case 'notes':
           if (line.startsWith('-') || line.startsWith('*') || line.match(/^[a-zA-Z]/)) {
             this.recipe.notes.push(this.cleanListItem(line));
           }
           break;
-          
+
         case 'tags':
           if (line.startsWith('-') || line.startsWith('*') || line.match(/^[a-zA-Z]/)) {
             this.recipe.tags.push(this.cleanListItem(line));
@@ -214,9 +214,9 @@ class RecipeConverter {
     return line.replace(/^[-*]\s*|^\d+\.\s*/, '').trim();
   }
 
-  generateFrontmatter() {
+  generateFrontmatter(existingDate = null) {
     const today = new Date().toISOString().split('T')[0];
-    
+
     // Calculate total time if not provided
     let totalTime = this.recipe.frontmatter.totalTime;
     if (!totalTime && this.recipe.frontmatter.prepTime && this.recipe.frontmatter.cookTime) {
@@ -230,13 +230,13 @@ class RecipeConverter {
       description: this.recipe.frontmatter.description || "A delicious recipe",
       rating: this.recipe.frontmatter.rating || DEFAULT_VALUES.rating,
       author: this.recipe.frontmatter.author || DEFAULT_VALUES.author,
-      date: today,
+      date: existingDate || today, // Use existing date if provided, otherwise today
       category: this.recipe.frontmatter.category || "Main",
       cuisine: this.recipe.frontmatter.cuisine || DEFAULT_VALUES.cuisine,
       difficulty: this.recipe.frontmatter.difficulty || DEFAULT_VALUES.difficulty,
       servings: this.recipe.frontmatter.servings || "4",
       prepTime: this.recipe.frontmatter.prepTime || "15 Minutes",
-      cookTime: this.recipe.frontmatter.cookTime || "20 Minutes", 
+      cookTime: this.recipe.frontmatter.cookTime || "20 Minutes",
       totalTime: totalTime || "35 Minutes",
       calories: this.recipe.frontmatter.calories || "300",
       dietary: this.recipe.frontmatter.dietary || DEFAULT_VALUES.dietary,
@@ -262,15 +262,15 @@ class RecipeConverter {
       }
     }
     result += '---\n';
-    
+
     return result;
   }
 
   generateIngredients() {
     if (this.recipe.ingredients.length === 0 && this.recipe.ingredientCategories.length === 0) return '';
-    
+
     let result = '### Ingredients\n\n';
-    
+
     // Handle categorized ingredients
     if (this.recipe.ingredientCategories.length > 0) {
       result += '<RecipeIngredients categories={[\n';
@@ -283,7 +283,7 @@ class RecipeConverter {
         const categoryComma = index < this.recipe.ingredientCategories.length - 1 ? ',' : '';
         result += `    ]\n  }${categoryComma}\n`;
       });
-      
+
       // Add any non-categorized ingredients at the end
       if (this.recipe.ingredients.length > 0) {
         result += `,\n  {\n    title: "Other Ingredients",\n    ingredients: [\n`;
@@ -302,15 +302,15 @@ class RecipeConverter {
       });
       result += '</RecipeIngredients>\n\n';
     }
-    
+
     return result;
   }
 
   generateInstructions() {
     if (this.recipe.instructions.length === 0) return '';
-    
+
     let result = '### Instructions\n\n<InstructionsContainer>\n';
-    
+
     // Group instructions by section
     const sections = {};
     this.recipe.instructions.forEach(instruction => {
@@ -324,13 +324,13 @@ class RecipeConverter {
     // Generate each section
     Object.entries(sections).forEach(([sectionName, steps]) => {
       result += `  <InstructionsSection title="${sectionName}">\n`;
-      
+
       steps.forEach(step => {
         const text = this.highlightIngredients(step.text);
         result += `    <InstructionStep stepNumber={${step.step}}>\n`;
         result += `      ${text}\n`;
         result += `    </InstructionStep>\n`;
-        
+
         // Add step images if Alt text is provided
         if (step.altTexts && step.altTexts.length > 1) {
           // Multiple images with dash notation (step-1, step-2, etc.)
@@ -352,13 +352,13 @@ class RecipeConverter {
           const stepNumber = step.step.toString().padStart(2, '0');
           result += `\n    <ServerStepImage stepNumber="${stepNumber}" alt="${altText}" caption="${caption}" />\n`;
         }
-        
+
         if (step !== steps[steps.length - 1]) result += '\n';
       });
-      
+
       result += '  </InstructionsSection>\n';
     });
-    
+
     result += '</InstructionsContainer>\n\n';
     return result;
   }
@@ -367,13 +367,13 @@ class RecipeConverter {
     // Simple highlighting - wrap words that match ingredients in <strong> tags
     let result = text;
     const processedWords = new Set();
-    
+
     // Collect all ingredients from both regular and categorized lists
     const allIngredients = [...this.recipe.ingredients];
     this.recipe.ingredientCategories.forEach(category => {
       allIngredients.push(...category.ingredients);
     });
-    
+
     allIngredients.forEach(ingredient => {
       const words = ingredient.split(' ').filter(word => word.length > 3);
       words.forEach(word => {
@@ -393,7 +393,7 @@ class RecipeConverter {
 
   generateNotes() {
     if (this.recipe.notes.length === 0) return '';
-    
+
     let result = '### Notes\n\n<RecipeNotes>\n';
     this.recipe.notes.forEach(note => {
       result += `  <>${note}</>\n`;
@@ -425,7 +425,7 @@ class RecipeConverter {
 
     // Extract YouTube ID from various URL formats
     let youtubeId = this.recipe.frontmatter.youtube;
-    
+
     // Handle full YouTube URLs
     const youtubeRegex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
     const match = youtubeId.match(youtubeRegex);
@@ -439,9 +439,9 @@ class RecipeConverter {
     return `\n### External Sources\n\n<YouTube id="${youtubeId}" title="${recipeTitle}" />\n\n`;
   }
 
-  convert() {
+  convert(existingDate = null) {
     return [
-      this.generateFrontmatter(),
+      this.generateFrontmatter(existingDate),
       this.generateIngredients(),
       this.generateInstructions(),
       this.generateNotes(),
@@ -454,7 +454,7 @@ class RecipeConverter {
 // CLI functionality
 function convertSingleFile(inputFile, options = {}) {
   const { category, outputFile = null } = options;
-  
+
   if (!fs.existsSync(inputFile)) {
     console.error(`Error: Input file "${inputFile}" not found.`);
     return false;
@@ -463,46 +463,62 @@ function convertSingleFile(inputFile, options = {}) {
   try {
     const content = fs.readFileSync(inputFile, 'utf-8');
     const converter = new RecipeConverter();
-    
+
     // Override category if specified
     if (category) {
       converter.recipe.frontmatter.category = category.charAt(0).toUpperCase() + category.slice(1);
     }
-    
-    converter.parseInput(content);
-    const result = converter.convert();
 
-    if (outputFile) {
-      fs.writeFileSync(outputFile, result);
-      console.log(`✅ Recipe converted and saved to: ${outputFile}`);
-    } else {
+    converter.parseInput(content);
+
+    // Check for existing file and extract date if it exists
+    let existingDate = null;
+    let outputPath = outputFile;
+
+    if (!outputFile) {
       // Auto-generate output filename and path
       const title = converter.recipe.frontmatter.title || 'untitled-recipe';
       const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
       const recipeCategory = converter.recipe.frontmatter.category?.toLowerCase() || '';
-      
+
       // Use category as folder name directly, or root if no category
-      const outputDir = recipeCategory 
+      const outputDir = recipeCategory
         ? path.join(__dirname, '..', 'content', 'docs', recipeCategory)
         : path.join(__dirname, '..', 'content', 'docs');
-      const outputPath = path.join(outputDir, `${slug}.mdx`);
+      outputPath = path.join(outputDir, `${slug}.mdx`);
 
       // Create directory if it doesn't exist
       if (!fs.existsSync(outputDir)) {
         fs.mkdirSync(outputDir, { recursive: true });
       }
-
-      fs.writeFileSync(outputPath, result);
-      console.log(`✅ Recipe converted and saved to: ${outputPath}`);
     }
 
+    // Check if the output file already exists and extract its date
+    if (fs.existsSync(outputPath)) {
+      try {
+        const existingContent = fs.readFileSync(outputPath, 'utf-8');
+        const dateMatch = existingContent.match(/^date:\s*"?([^"]+)"?$/im);
+        if (dateMatch) {
+          existingDate = dateMatch[1].trim();
+        }
+      } catch (error) {
+        // If we can't read the existing file, continue with new date
+      }
+    }
+
+    const result = converter.convert(existingDate);
+
+    fs.writeFileSync(outputPath, result);
+    const status = existingDate ? 'updated' : 'created';
+    console.log(`✅ Recipe ${status} and saved to: ${outputPath}`);
+
     // Count total ingredients
-    const totalIngredients = converter.recipe.ingredients.length + 
+    const totalIngredients = converter.recipe.ingredients.length +
       converter.recipe.ingredientCategories.reduce((total, cat) => total + cat.ingredients.length, 0);
-    
+
     console.log(`Recipe Details: ${converter.recipe.frontmatter.title} | ${converter.recipe.frontmatter.category} | ${totalIngredients} ingredients | ${converter.recipe.instructions.length} steps`);
     return true;
-    
+
   } catch (error) {
     console.error(`Error converting recipe "${inputFile}":`, error.message);
     return false;
@@ -511,35 +527,35 @@ function convertSingleFile(inputFile, options = {}) {
 
 function convertAllRecipes(options = {}) {
   const recipesDir = path.join(__dirname, '..', 'recipes');
-  
+
   if (!fs.existsSync(recipesDir)) {
     console.error(`Error: Recipes directory "${recipesDir}" not found.`);
     return;
   }
 
   console.log('🚀 Converting all recipes from recipes/ folder...\n');
-  
+
   // First, clean up orphaned recipes
   if (options.cleanup !== false) {
     cleanupOrphanedRecipes(recipesDir);
   }
-  
+
   let totalConverted = 0;
   let totalFailed = 0;
 
   function processDirectory(dirPath, categoryFromPath = null) {
     const entries = fs.readdirSync(dirPath, { withFileTypes: true });
-    
+
     for (const entry of entries) {
       const fullPath = path.join(dirPath, entry.name);
-      
+
       if (entry.isDirectory()) {
-        // Skip template directories entirely
-        if (entry.name.startsWith('_templates') || entry.name.includes('template')) {
-          console.log(`⏭️  Skipping template directory: ${entry.name}`);
+        // Skip template directories and images directory entirely
+        if (entry.name.startsWith('_templates') || entry.name.includes('template') || entry.name === 'images') {
+          console.log(`⏭️  Skipping directory: ${entry.name}`);
           continue;
         }
-        
+
         // Recursively process subdirectories, use folder name as category
         const categoryName = entry.name;
         console.log(`📁 Processing category: ${categoryName}`);
@@ -550,12 +566,12 @@ function convertAllRecipes(options = {}) {
           console.log(`⏭️  Skipping: ${entry.name}`);
           continue;
         }
-        
+
         console.log(`📄 Converting: ${entry.name}`);
         const success = convertSingleFile(fullPath, {
           category: categoryFromPath
         });
-        
+
         if (success) {
           totalConverted++;
         } else {
@@ -566,7 +582,7 @@ function convertAllRecipes(options = {}) {
   }
 
   processDirectory(recipesDir);
-  
+
   console.log(`\n📊 Conversion Summary:`);
   console.log(`✅ Successfully converted: ${totalConverted} recipes`);
   if (totalFailed > 0) {
@@ -577,21 +593,21 @@ function convertAllRecipes(options = {}) {
 
 function cleanupOrphanedRecipes(recipesDir) {
   const contentDir = path.join(__dirname, '..', 'content', 'docs');
-  
+
   console.log('🧹 Cleaning up orphaned recipe files...\n');
-  
+
   // Get all existing recipe text files with their expected output paths
   const existingRecipes = new Set();
-  
+
   function scanRecipes(dirPath, categoryFromPath = null) {
     const entries = fs.readdirSync(dirPath, { withFileTypes: true });
-    
+
     for (const entry of entries) {
       const fullPath = path.join(dirPath, entry.name);
-      
+
       if (entry.isDirectory()) {
-        // Skip template directories entirely
-        if (entry.name.startsWith('_templates') || entry.name.includes('template')) {
+        // Skip template directories and images directory entirely
+        if (entry.name.startsWith('_templates') || entry.name.includes('template') || entry.name === 'images') {
           continue;
         }
         scanRecipes(fullPath, entry.name);
@@ -600,19 +616,23 @@ function cleanupOrphanedRecipes(recipesDir) {
         if (entry.name.includes('template') || entry.name.includes('README') || entry.name.includes('readme')) {
           continue;
         }
-        
-        // Read the title to generate the expected slug
+
+        // Read the title and category to generate the expected slug
         try {
           const content = fs.readFileSync(fullPath, 'utf-8');
           const titleMatch = content.match(/^title:\s*(.+)$/im);
           const title = titleMatch ? titleMatch[1].trim().replace(/^["']|["']$/g, '') : 'untitled-recipe';
           const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
-          
-          const category = categoryFromPath || '';
-          const expectedPath = category 
-            ? path.join(contentDir, category, `${slug}.mdx`)
+
+          // Parse category from file content, fallback to categoryFromPath
+          const categoryMatch = content.match(/^category:\s*(.+)$/im);
+          const fileCategory = categoryMatch ? categoryMatch[1].trim().replace(/^["']|["']$/g, '') : null;
+          const category = fileCategory || categoryFromPath || '';
+
+          const expectedPath = category
+            ? path.join(contentDir, category.toLowerCase(), `${slug}.mdx`)
             : path.join(contentDir, `${slug}.mdx`);
-          
+
           existingRecipes.add(expectedPath);
         } catch (error) {
           console.warn(`⚠️  Could not read recipe file: ${fullPath}`);
@@ -620,21 +640,21 @@ function cleanupOrphanedRecipes(recipesDir) {
       }
     }
   }
-  
+
   scanRecipes(recipesDir);
-  
+
   // Find and remove orphaned MDX files
   let deletedCount = 0;
-  
+
   function cleanupCategory(categoryPath) {
     if (!fs.existsSync(categoryPath)) return;
-    
+
     const entries = fs.readdirSync(categoryPath, { withFileTypes: true });
-    
+
     for (const entry of entries) {
       if (entry.isFile() && entry.name.endsWith('.mdx')) {
         const fullPath = path.join(categoryPath, entry.name);
-        
+
         if (!existingRecipes.has(fullPath)) {
           console.log(`🗑️  Removing orphaned recipe: ${path.relative(contentDir, fullPath)}`);
           fs.unlinkSync(fullPath);
@@ -643,13 +663,13 @@ function cleanupOrphanedRecipes(recipesDir) {
       }
     }
   }
-  
+
   function removeEmptyDirectories(dir) {
     if (!fs.existsSync(dir)) return false;
-    
+
     try {
       const entries = fs.readdirSync(dir, { withFileTypes: true });
-      
+
       // First, recursively check subdirectories
       for (const entry of entries) {
         if (entry.isDirectory()) {
@@ -657,7 +677,7 @@ function cleanupOrphanedRecipes(recipesDir) {
           removeEmptyDirectories(subDirPath);
         }
       }
-      
+
       // Check if directory is now empty (after potential subdirectory removal)
       const remainingEntries = fs.readdirSync(dir);
       if (remainingEntries.length === 0) {
@@ -668,19 +688,19 @@ function cleanupOrphanedRecipes(recipesDir) {
     } catch (error) {
       // Silently ignore errors (directory might have been removed already, etc.)
     }
-    
+
     return false;
   }
-  
+
   // Clean up all possible category directories and root
   function cleanupCategory(dir) {
     if (!fs.existsSync(dir)) return;
-    
+
     const entries = fs.readdirSync(dir, { withFileTypes: true });
-    
+
     for (const entry of entries) {
       const fullPath = path.join(dir, entry.name);
-      
+
       if (entry.isDirectory()) {
         // Recursively clean subdirectories
         cleanupCategory(fullPath);
@@ -693,16 +713,16 @@ function cleanupOrphanedRecipes(recipesDir) {
       }
     }
   }
-  
+
   // Clean content/docs directory recursively
   cleanupCategory(contentDir);
-  
+
   // Remove empty directories after cleaning up orphaned files
   let removedDirs = 0;
   if (removeEmptyDirectories(contentDir)) {
     removedDirs++;
   }
-  
+
   if (deletedCount > 0 || removedDirs > 0) {
     const messages = [];
     if (deletedCount > 0) messages.push(`${deletedCount} orphaned recipe(s)`);
@@ -715,7 +735,7 @@ function cleanupOrphanedRecipes(recipesDir) {
 
 function main() {
   const args = process.argv.slice(2);
-  
+
   if (args.length === 0 || args.includes('--help') || args.includes('-h')) {
     console.log(`
 Recipe Converter Tool
@@ -723,7 +743,7 @@ Recipe Converter Tool
 Usage:
   # Convert single file
   node scripts/recipe-converter.js <input-file> [output-file] [options]
-  
+
   # Convert all recipes in recipes/ folder
   node scripts/recipe-converter.js --all [options]
 
@@ -767,7 +787,7 @@ Notes:
   const inputFile = args[0];
   const categoryIndex = args.indexOf('--category');
   const category = categoryIndex !== -1 ? args[categoryIndex + 1] : null;
-  
+
   let outputFile = args[1];
   // If second argument is a flag or category, treat it as no output file specified
   if (outputFile && (outputFile.startsWith('--') || outputFile === category)) {

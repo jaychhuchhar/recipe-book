@@ -4,6 +4,11 @@
 
 echo "🚀 Setting up Recipe Book project..."
 
+# Set up Git and SSH first
+echo "🔐 Setting up Git and SSH..."
+chmod +x .devcontainer/git-setup.sh
+.devcontainer/git-setup.sh
+
 # Set up recipe images
 echo "🖼️  Setting up recipe images..."
 npm run setup-images
